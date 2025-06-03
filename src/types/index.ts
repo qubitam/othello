@@ -9,6 +9,18 @@ export type GameState = {
   board: Board;
   currentPlayer: Player;
   winner: Player | null;
+  validMoves: Position[];
+  score: {
+    black: number;
+    white: number;
+  };
+  gameOver: boolean;
+}
+
+// Position is the position of the piece on the board
+export type Position = {
+  row: number;
+  col: number;
 }
 
 // Board size is 8x8

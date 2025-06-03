@@ -1,13 +1,21 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { createInitialBoard } from '../utils/board'
-import { type Player, type GameState } from '../types'
+import type { GameState } from '../types'
+import { getValidMoves, makeMove, getWinner, isValidMove, getOpponent } from '../utils/gameLogic';
 
+const initialBoard = createInitialBoard();
 
 // Initial state of the game
 const initialState: GameState = {
-	board: createInitialBoard(),
+	board: initialBoard,
 	currentPlayer: 'black',
 	winner: null,
+	validMoves: getValidMoves(initialBoard, 'black'),
+	score: {
+		black: 0,
+		white: 0,
+	},
+	gameOver: false,
 }
 
 // GameSlice is the slice of the game
@@ -20,27 +28,60 @@ const gameSlice = createSlice({
 			state.board = createInitialBoard();
 			state.currentPlayer = 'black';
 			state.winner = null;
-		},
-		// Set the current player
-		setCurrentPlayer: (state, action: PayloadAction<Player>) => {
-			state.currentPlayer = action.payload;
+			state.validMoves = getValidMoves(state.board, state.currentPlayer);
+			state.score = {
+				black: 0,
+				white: 0,
+			};
+			state.gameOver = false;
 		},
 
 		// Place a piece on the board
-		placePiece: (state, action: PayloadAction<{ row: number, col: number }>) => {
+		makeGameMove: (state, action: PayloadAction<{ row: number, col: number }>) => {
 			// Get the row and column from the payload
 			const { row, col } = action.payload;
-			// Place the piece on the board
-			state.board[row][col] = state.currentPlayer;
+
+			// Check if the move is valid
+			if (!isValidMove(state.board, row, col, state.currentPlayer)) {
+				return;
+			}
+
+			// Make the move
+			state.board = makeMove(state.board, row, col, state.currentPlayer);
+
 			// Switch the current player
-			state.currentPlayer = state.currentPlayer === 'black' ? 'white' : 'black';
+			const nextPlayer = getOpponent(state.currentPlayer);
+			const nextValidMoves = getValidMoves(state.board, nextPlayer);
+
+			// If there are valid moves, switch to the next player
+			if (nextValidMoves.length > 0) {
+				state.currentPlayer = nextPlayer;
+				state.validMoves = nextValidMoves;
+			} else {
+				// Check if the current player has valid moves if not, the game is over
+				const currentMoves = getValidMoves(state.board, state.currentPlayer);
+				// If there are valid moves, switch to the current player
+				if (currentMoves.length > 0) {
+					state.validMoves = currentMoves;
+				} else {
+					state.validMoves = [];
+					state.winner = getWinner(state.board);
+					state.gameOver = true;
+				}
+			}
+
+			// Update the score
+			state.score = {
+				black: state.board.flat().filter(cell => cell === 'black').length,
+				white: state.board.flat().filter(cell => cell === 'white').length,
+			}
 		}
 			
 	}
 })  
 
 // Export the actions
-export const { setCurrentPlayer, resetGame, placePiece } = gameSlice.actions;
+export const { resetGame, makeGameMove } = gameSlice.actions;
 
 // Export the reducer
 export default gameSlice.reducer;
