@@ -1,54 +1,61 @@
-# React + TypeScript + Vite
+# Othello Game - Technical Assignment
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a simple Othello (Reversi) game built with React, TypeScript, and Redux Toolkit. Building this from scratch to demonstrate clean architecture and development practices.
 
-Currently, two official plugins are available:
+## Project Goals
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Building a complete Othello game to showcase:
+- Modern React with TypeScript
+- Redux state management
+- Clean, maintainable code
+- Professional UI/UX
+- Extensible and scalable
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React 19** + TypeScript
+- **Redux Toolkit** for state
+- **Tailwind CSS v4** for styling
+- **Vite** for fast builds
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Development Plan
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Phase 1: Setup & Foundation
+- [x] Project setup with Vite + React + TypeScript  
+- [x] Tailwind CSS configuration
+- [ ] Basic types and folder structure
+- [ ] Redux store setup
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Phase 2: Basic Board
+- [ ] Create 8x8 visual game board
+- [ ] Board component with cells
+- [ ] Initial piece placement (4 center pieces)
+- [ ] Basic styling
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+### Phase 3: Game Logic  
+- [ ] Move validation (Othello rules)
+- [ ] Piece flipping algorithm
+- [ ] Valid move detection
+- [ ] Turn switching
+
+### Phase 4: Player Interaction
+- [ ] Click handlers for moves
+- [ ] Visual feedback (valid moves highlighted)
+- [ ] Score tracking
+- [ ] Game over detection
+
+### Phase 5: AI Implementation
+- [ ] Simple AI with difficulty levels
+- [ ] AI move selection algorithms
+- [ ] Human vs AI mode
+- [ ] AI vs AI mode
+
+### Phase 6: Extra Features
+- [ ] Better animations
+- [ ] Sound effects
+- [ ] Move history
+- [ ] Game statistics
+- [ ] Online multiplayer
+- [ ] Mobile responsiveness
+
+## Planned Structure
