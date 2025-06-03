@@ -1,13 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { createInitialBoard } from '../utils/board'
-import { type Board, type Player } from '../types'
+import { type Player, type GameState } from '../types'
 
-// GameState is the state of the game
-interface GameState {
-	board: Board;
-	currentPlayer: Player;
-	winner: Player | null;
-}
 
 // Initial state of the game
 const initialState: GameState = {
@@ -21,20 +15,32 @@ const gameSlice = createSlice({
 	name: 'game',
 	initialState,
 	reducers: {
+		// Reset the game
 		resetGame: (state) => {
 			state.board = createInitialBoard();
 			state.currentPlayer = 'black';
 			state.winner = null;
 		},
-		setCurrentPlayer: (state, action) => {
+		// Set the current player
+		setCurrentPlayer: (state, action: PayloadAction<Player>) => {
 			state.currentPlayer = action.payload;
 		},
+
+		// Place a piece on the board
+		placePiece: (state, action: PayloadAction<{ row: number, col: number }>) => {
+			// Get the row and column from the payload
+			const { row, col } = action.payload;
+			// Place the piece on the board
+			state.board[row][col] = state.currentPlayer;
+			// Switch the current player
+			state.currentPlayer = state.currentPlayer === 'black' ? 'white' : 'black';
+		}
 			
 	}
 })  
 
 // Export the actions
-export const { setCurrentPlayer, resetGame } = gameSlice.actions;
+export const { setCurrentPlayer, resetGame, placePiece } = gameSlice.actions;
 
 // Export the reducer
 export default gameSlice.reducer;
