@@ -23,14 +23,14 @@ Building a complete Othello game to showcase:
 ### Phase 1: Setup & Foundation
 - [x] Project setup with Vite + React + TypeScript  
 - [x] Tailwind CSS configuration
-- [ ] Basic types and folder structure
-- [ ] Redux store setup
+- [x] Basic types and folder structure
+- [x] Redux store setup
 
 ### Phase 2: Basic Board
-- [ ] Create 8x8 visual game board
-- [ ] Board component with cells
-- [ ] Initial piece placement (4 center pieces)
-- [ ] Basic styling
+- [x] Create 8x8 visual game board
+- [x] Board component with cells
+- [x] Initial piece placement (4 center pieces)
+- [x] Basic styling
 
 ### Phase 3: Game Logic  
 - [ ] Move validation (Othello rules)
