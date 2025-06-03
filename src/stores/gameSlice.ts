@@ -12,8 +12,8 @@ const initialState: GameState = {
 	winner: null,
 	validMoves: getValidMoves(initialBoard, 'black'),
 	score: {
-		black: 0,
-		white: 0,
+		black: 2,
+		white: 2,
 	},
 	gameOver: false,
 }
@@ -30,8 +30,8 @@ const gameSlice = createSlice({
 			state.winner = null;
 			state.validMoves = getValidMoves(state.board, state.currentPlayer);
 			state.score = {
-				black: 0,
-				white: 0,
+				black: 2,
+				white: 2,
 			};
 			state.gameOver = false;
 		},

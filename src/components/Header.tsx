@@ -1,13 +1,25 @@
 import React from 'react';
+
+// HeaderProps is the props for the Header component
 interface HeaderProps {
 	currentPlayer: string;
+	score: {
+		black: number;
+		white: number;
+	};
+	winner: string | null;
+	gameOver: boolean;
+	validMovesCount: number;
 }
 
-const Header: React.FC<HeaderProps> = ({ currentPlayer }) => {
+const Header: React.FC<HeaderProps> = ({ currentPlayer, score, winner, gameOver, validMovesCount }) => {
 	return (
 		<div>
-			<h1 className="text-4xl font-bold">Othello Game</h1>
 			<p>Current Player: {currentPlayer}</p>
+			<p>Score: {score.black} - {score.white}</p>
+			<p>Winner: {winner}</p>
+			<p>Game Over: {gameOver ? 'Yes' : 'No'}</p>
+			<p>Valid Moves Count: {validMovesCount}</p>
 		</div>
 	)
 }

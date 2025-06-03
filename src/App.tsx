@@ -37,7 +37,7 @@ const GameContainer = () => {
 					</div>
 				</div>
         <div className="flex flex-col items-center justify-center">
-          <Header currentPlayer={currentPlayer} />
+          <Header currentPlayer={currentPlayer} score={score} winner={winner} gameOver={gameOver} validMovesCount={validMoves.length} />
         </div>
         <div className="flex flex-col items-center justify-center">
           	<Board board={board} validMoves={validMoves}  onCellClick={handleCellClick} currentPlayer={currentPlayer} /> 
