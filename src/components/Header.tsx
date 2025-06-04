@@ -1,27 +1,124 @@
+// Compact Header with emojis - minimal space
+
 import React from 'react';
+import type { Player } from '../types';
 
-// HeaderProps is the props for the Header component
 interface HeaderProps {
-	currentPlayer: string;
-	score: {
-		black: number;
-		white: number;
-	};
-	winner: string | null;
-	gameOver: boolean;
-	validMovesCount: number;
+  currentPlayer: Player;
+  score: { black: number; white: number };
+  winner: Player | null;
+  gameOver: boolean;
+  validMovesCount: number;
 }
 
-const Header: React.FC<HeaderProps> = ({ currentPlayer, score, winner, gameOver, validMovesCount }) => {
-	return (
-		<div>
-			<p>Current Player: {currentPlayer}</p>
-			<p>Score: {score.black} - {score.white}</p>
-			<p>Winner: {winner}</p>
-			<p>Game Over: {gameOver ? 'Yes' : 'No'}</p>
-			<p>Valid Moves Count: {validMovesCount}</p>
-		</div>
-	)
-}
+const Header: React.FC<HeaderProps> = ({ 
+  currentPlayer, 
+  score, 
+  winner, 
+  gameOver,
+  validMovesCount 
+}) => {
+  const getStatusMessage = (): string => {
+    if (gameOver) {
+      if (winner) {
+        return `${winner} Wins! 🏆`;
+      } else {
+        return "Tie Game! 🤝";
+      }
+    }
+    
+    if (validMovesCount === 0) {
+      return `${currentPlayer} - No moves`;
+    }
+    
+    return `${currentPlayer}'s Turn`;
+  };
+
+	// Note ** AI Helped in making this component **
+
+  return (
+    <div className="flex flex-col items-center">
+      {/* Compact Header Card */}
+      <div className="w-[33rem] md:w-[42rem] bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-3 shadow-lg">
+        {/* Current Status - Very Compact */}
+        <div className="text-center mb-3">
+          <div className="flex items-center justify-center gap-2">
+            <div className="text-4xl">
+              {currentPlayer === 'black' ? '⚫' : '⚪'}
+            </div>
+            <h2 className="text-xl font-bold text-white capitalize">
+              {getStatusMessage()}
+            </h2>
+          </div>
+          
+          {!gameOver && validMovesCount > 0 && (
+            <p className="text-purple-200/70 text-sm mt-0.5">
+              {validMovesCount} moves available
+            </p>
+          )}
+        </div>
+
+        {/* Compact Players Score Display */}
+        <div className="flex items-center justify-center gap-3">
+          {/* Black Player */}
+          <div className={`
+            flex items-center gap-1.5 px-3 py-1 rounded-xl transition-all duration-300 flex-1
+            ${currentPlayer === 'black' && !gameOver 
+              ? 'bg-white/20 ring-1 ring-white/30' 
+              : 'bg-white/5'
+            }
+            ${winner === 'black' ? 'bg-yellow-500/20 ring-1 ring-yellow-400' : ''}
+          `}>
+            <div className="text-3xl">⚫</div>
+            <div className="flex-1">
+              <div className="text-xl font-bold text-white">{score.black}</div>
+              <div className="text-base font-medium text-gray-300">Black</div>
+            </div>
+            {currentPlayer === 'black' && !gameOver && (
+              <div className="text-green-400 text-xs">●</div>
+            )}
+            {winner === 'black' && (
+              <div className="text-yellow-400 text-2xl">👑</div>
+            )}
+          </div>
+
+          {/* VS Separator */}
+          <div className="text-xs font-bold text-white/40 px-1">VS</div>
+
+          {/* White Player */}
+          <div className={`
+            flex items-center gap-1.5 px-3 py-1 rounded-xl transition-all duration-300 flex-1
+            ${currentPlayer === 'white' && !gameOver 
+              ? 'bg-white/20 ring-1 ring-white/30' 
+              : 'bg-white/5'
+            }
+            ${winner === 'white' ? 'bg-yellow-500/20 ring-1 ring-yellow-400' : ''}
+          `}>
+            <div className="text-3xl">⚪</div>
+            <div className="flex-1">
+              <div className="text-xl font-bold text-white">{score.white}</div>
+              <div className="text-base font-medium text-gray-300">White</div>
+            </div>
+            {currentPlayer === 'white' && !gameOver && (
+              <div className="text-green-400 text-xs">●</div>
+            )}
+            {winner === 'white' && (
+              <div className="text-yellow-400 text-2xl">👑</div>
+            )}
+          </div>
+        </div>
+
+        {/* Compact Game Over Message */}
+        {gameOver && (
+          <div className="mt-2 text-center">
+            <p className="text-yellow-300 text-xs font-semibold">
+              Final: Black {score.black} - White {score.white}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default Header;
