@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { createInitialBoard } from '../utils/board'
 import type { GameState } from '../types'
-import { getValidMoves, makeMove, getWinner, isValidMove, getOpponent } from '../utils/gameLogic';
+import { getValidMoves, makeMove, getWinner, isValidMove, getOpponent, calculateScores } from '../utils/gameLogic';
 
 const initialBoard = createInitialBoard();
 
@@ -18,6 +18,7 @@ const initialState: GameState = {
 	gameOver: false,
 	gameMode: 'human_vs_human',
 	gameStarted: false,
+	isAIThinking: false,
 }
 
 // GameSlice is the slice of the game
@@ -26,18 +27,17 @@ const gameSlice = createSlice({
 	initialState,
 	reducers: {
 		// Start the game
-		startNewGame: (state, action: PayloadAction<string>) => {
+		startNewGame: (state, action: PayloadAction<{ mode: string }>) => {
+			const { mode } = action.payload;
+
 			const newBoard = createInitialBoard();
 			state.board = newBoard;
 			state.currentPlayer = 'black';
 			state.validMoves = getValidMoves(newBoard, state.currentPlayer);
-			state.score = {
-				black: 2,
-				white: 2,
-			};
+			state.score = calculateScores(newBoard);
 			state.gameOver = false;
 			state.winner = null;
-			state.gameMode = action.payload;
+			state.gameMode = mode;
 			state.gameStarted = true;
 		},
 
@@ -47,10 +47,7 @@ const gameSlice = createSlice({
 			state.currentPlayer = 'black';
 			state.winner = null;
 			state.validMoves = getValidMoves(state.board, state.currentPlayer);
-			state.score = {
-				black: 2,
-				white: 2,
-			};
+			state.score = calculateScores(state.board);
 			state.gameOver = false;
 		},
 
@@ -89,21 +86,23 @@ const gameSlice = createSlice({
 			}
 
 			// Update the score
-			state.score = {
-				black: state.board.flat().filter(cell => cell === 'black').length,
-				white: state.board.flat().filter(cell => cell === 'white').length,
-			}
+			state.score = calculateScores(state.board);
 		},
 
 		// Show main menu 
 		showMainMenu: (state) => {
 			state.gameStarted = false;
+		},
+
+		// Set the AI thinking
+		setAIThinking: (state, action: PayloadAction<boolean>) => {
+			state.isAIThinking = action.payload;
 		}
 	}
 })  
 
 // Export the actions
-export const { startNewGame, resetGame, makeGameMove, showMainMenu } = gameSlice.actions;
+export const { startNewGame, resetGame, makeGameMove, showMainMenu, setAIThinking } = gameSlice.actions;
 
 // Export the reducer
 export default gameSlice.reducer;

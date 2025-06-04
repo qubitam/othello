@@ -3,6 +3,7 @@ import { Provider } from 'react-redux'
 import { store } from './stores/store'
 import { useAppDispatch, useAppSelector } from './hooks/redux'
 import { startNewGame, resetGame, makeGameMove, showMainMenu } from './stores/gameSlice'
+import { useAI } from './hooks/useAi'
 import Board from './components/Board'
 import Header from './components/Header'
 import TopNavigation from './components/TopNavigation'
@@ -18,9 +19,10 @@ const GameContainer = () => {
     gameMode,
     gameStarted
   } = useAppSelector((state) => state.game);
-
-  
 	const dispatch = useAppDispatch();
+
+  // AI Hook
+  useAI();
 
   // Handle cell click
   const handleCellClick = (row: number, col: number) => {
@@ -28,8 +30,8 @@ const GameContainer = () => {
   }
 
   // Handle start game
-  const handleStartGame = (gameMode: string) => {
-    dispatch(startNewGame(gameMode));
+  const handleStartGame = (selectedMode: string) => {
+    dispatch(startNewGame({ mode: selectedMode }));
   }
 
   // Handle going back to main menu

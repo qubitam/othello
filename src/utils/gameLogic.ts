@@ -115,11 +115,18 @@ export const makeMove = (
 
 // Get the winner
 export const getWinner = (board: Board): Player | null => {
+	const { black, white } = calculateScores(board);
+
+	if (black > white) return 'black';
+	if (white > black) return 'white';
+
+	return null;
+}
+
+// Calculate the scores
+export const calculateScores = (board: Board): { black: number, white: number } => {
 	const blackCount = board.flat().filter(cell => cell === 'black').length;
 	const whiteCount = board.flat().filter(cell => cell === 'white').length;
 
-	if (blackCount > whiteCount) return 'black';
-	if (whiteCount > blackCount) return 'white';
-
-	return null;
+	return { black: blackCount, white: whiteCount };
 }

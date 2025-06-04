@@ -17,6 +17,7 @@ export type GameState = {
   gameOver: boolean;
   gameMode: string;
   gameStarted: boolean;
+  isAIThinking: boolean;
 }
 
 // Position is the position of the piece on the board
