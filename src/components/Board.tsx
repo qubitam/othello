@@ -7,14 +7,33 @@ interface BoardProps {
 	validMoves: Position[];
 	onCellClick: (row: number, col: number) => void;
 	currentPlayer: Player;
+	gameMode: string;
+	isAIThinking: boolean;
 }
 
 // Board component
-const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPlayer }) => {
+const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPlayer, gameMode, isAIThinking }) => {
 	
 	// Check if a cell is a valid move
   const isValidMove = (row: number, col: number) => {
     return validMoves.some((move) => move.row === row && move.col === col);
+  }
+
+  // Check if clicks should be disabled (AI turn)
+  const shouldDisableClicks = () => {
+    if (isAIThinking) return true;
+    
+    // Disable clicks when it's AI's turn
+    if (gameMode === 'human_vs_ai' && currentPlayer === 'white') return true;
+    if (gameMode === 'ai_vs_ai') return true;
+    
+    return false;
+  }
+
+  // Handle cell click with AI turn check
+  const handleCellClick = (row: number, col: number) => {
+    if (shouldDisableClicks()) return;
+    onCellClick(row, col);
   }
 
 	return (
@@ -28,12 +47,12 @@ const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPl
 								border border-emerald-500/30 rounded-lg 
 								flex items-center justify-center relative 
 								transition-all duration-200
-								cursor-pointer hover:from-amber-500 hover:to-amber-600 hover:scale-105
+								${shouldDisableClicks() ? 'cursor-not-allowed' : 'cursor-pointer hover:from-amber-500 hover:to-amber-600 hover:scale-105'}
 								${isValidMove(rowIndex, colIndex) 
 									? 'from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 shadow-lg shadow-cyan-500/50 animate-pulse' 
 									: ''
 								}`}
-							onClick={() => onCellClick(rowIndex, colIndex)}
+							onClick={() => handleCellClick(rowIndex, colIndex)}
 						>
 							{cell !== 'empty' && (
 								<div 

@@ -63,4 +63,8 @@ Building a complete Othello game to showcase:
 - [ ] Undo move
 - [ ] Redo move
 
-## Planned Structure
+## Documentation of my approach
+
+### Game Logic
+
+

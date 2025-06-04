@@ -3,7 +3,7 @@ import { Provider } from 'react-redux'
 import { store } from './stores/store'
 import { useAppDispatch, useAppSelector } from './hooks/redux'
 import { startNewGame, resetGame, makeGameMove, showMainMenu } from './stores/gameSlice'
-import { useAI } from './hooks/useAi'
+import { useAI } from './hooks/useAI'
 import type { AI_DIFFICULTY } from './types'
 import Board from './components/Board'
 import Header from './components/Header'
@@ -18,7 +18,8 @@ const GameContainer = () => {
     winner,
     gameOver,
     gameMode,
-    gameStarted
+    gameStarted,
+    isAIThinking
   } = useAppSelector((state) => state.game);
 	const dispatch = useAppDispatch();
 
@@ -85,7 +86,9 @@ const GameContainer = () => {
             board={board} 
             validMoves={validMoves}  
             onCellClick={handleCellClick} 
-            currentPlayer={currentPlayer} 
+            currentPlayer={currentPlayer}
+            gameMode={gameMode}
+            isAIThinking={isAIThinking}
           /> 
         </div>
       </div>
