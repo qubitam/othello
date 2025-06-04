@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { createInitialBoard } from '../utils/board'
-import type { GameState } from '../types'
+import type { GameState, AI_DIFFICULTY } from '../types'
 import { getValidMoves, makeMove, getWinner, isValidMove, getOpponent, calculateScores } from '../utils/gameLogic';
 
 const initialBoard = createInitialBoard();
@@ -19,6 +19,7 @@ const initialState: GameState = {
 	gameMode: 'human_vs_human',
 	gameStarted: false,
 	isAIThinking: false,
+	aiDifficulty: 'medium',
 }
 
 // GameSlice is the slice of the game
@@ -27,8 +28,8 @@ const gameSlice = createSlice({
 	initialState,
 	reducers: {
 		// Start the game
-		startNewGame: (state, action: PayloadAction<{ mode: string }>) => {
-			const { mode } = action.payload;
+		startNewGame: (state, action: PayloadAction<{ mode: string, aiDifficulty?: AI_DIFFICULTY }>) => {
+			const { mode, aiDifficulty } = action.payload;
 
 			const newBoard = createInitialBoard();
 			state.board = newBoard;
@@ -39,6 +40,9 @@ const gameSlice = createSlice({
 			state.winner = null;
 			state.gameMode = mode;
 			state.gameStarted = true;
+			if (aiDifficulty) {
+				state.aiDifficulty = aiDifficulty;
+			}
 		},
 
 		// Reset the game
@@ -97,12 +101,17 @@ const gameSlice = createSlice({
 		// Set the AI thinking
 		setAIThinking: (state, action: PayloadAction<boolean>) => {
 			state.isAIThinking = action.payload;
+		},
+
+		// Set the AI difficulty
+		setAIDifficulty: (state, action: PayloadAction<AI_DIFFICULTY>) => {
+			state.aiDifficulty = action.payload;
 		}
 	}
 })  
 
 // Export the actions
-export const { startNewGame, resetGame, makeGameMove, showMainMenu, setAIThinking } = gameSlice.actions;
+export const { startNewGame, resetGame, makeGameMove, showMainMenu, setAIThinking, setAIDifficulty } = gameSlice.actions;
 
 // Export the reducer
 export default gameSlice.reducer;

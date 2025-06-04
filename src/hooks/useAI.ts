@@ -11,7 +11,8 @@ export const useAI = (): void => {
     gameMode, 
     validMoves, 
     gameOver,
-    isAIThinking 
+    isAIThinking,
+    aiDifficulty
   } = useAppSelector(state => state.game);
 
 	// In your useAI hook - add this timer back
@@ -28,7 +29,7 @@ export const useAI = (): void => {
       dispatch(setAIThinking(true));
       
       const timer = setTimeout(() => {
-        const aiMove = getAIMove(board, currentPlayer);
+        const aiMove = getAIMove(board, currentPlayer, aiDifficulty);
         
         if (aiMove) {
           dispatch(makeGameMove({ row: aiMove.row, col: aiMove.col }));

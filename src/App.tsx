@@ -4,6 +4,7 @@ import { store } from './stores/store'
 import { useAppDispatch, useAppSelector } from './hooks/redux'
 import { startNewGame, resetGame, makeGameMove, showMainMenu } from './stores/gameSlice'
 import { useAI } from './hooks/useAi'
+import type { AI_DIFFICULTY } from './types'
 import Board from './components/Board'
 import Header from './components/Header'
 import TopNavigation from './components/TopNavigation'
@@ -30,8 +31,8 @@ const GameContainer = () => {
   }
 
   // Handle start game
-  const handleStartGame = (selectedMode: string) => {
-    dispatch(startNewGame({ mode: selectedMode }));
+  const handleStartGame = (selectedMode: string, selectedAIDifficulty?: AI_DIFFICULTY) => {
+    dispatch(startNewGame({ mode: selectedMode, aiDifficulty: selectedAIDifficulty }));
   }
 
   // Handle going back to main menu

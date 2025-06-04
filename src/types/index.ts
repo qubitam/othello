@@ -18,6 +18,7 @@ export type GameState = {
   gameMode: string;
   gameStarted: boolean;
   isAIThinking: boolean;
+  aiDifficulty: AI_DIFFICULTY;
 }
 
 // Position is the position of the piece on the board
@@ -28,3 +29,6 @@ export type Position = {
 
 // Board size is 8x8
 export const BOARD_SIZE = 8;
+
+// AI difficulty
+export type AI_DIFFICULTY = 'easy' | 'medium' | 'hard';

@@ -33,22 +33,22 @@ Building a complete Othello game to showcase:
 - [x] Basic styling
 
 ### Phase 3: Game Logic  
-- [ ] Move validation (Othello rules)
-- [ ] Piece flipping algorithm
-- [ ] Valid move detection
-- [ ] Turn switching
+- [x] Move validation (Othello rules)
+- [x] Piece flipping algorithm
+- [x] Valid move detection
+- [x] Turn switching
 
 ### Phase 4: Player Interaction
-- [ ] Click handlers for moves
-- [ ] Visual feedback (valid moves highlighted)
-- [ ] Score tracking
-- [ ] Game over detection
+- [x] Click handlers for moves
+- [x] Visual feedback (valid moves highlighted)
+- [x] Score tracking
+- [x] Game over detection
 
 ### Phase 5: AI Implementation
 - [ ] Simple AI with difficulty levels
-- [ ] AI move selection algorithms
-- [ ] Human vs AI mode
-- [ ] AI vs AI mode
+- [x] AI move selection algorithms
+- [x] Human vs AI mode
+- [x] AI vs AI mode
 
 ### Phase 6: Extra Features
 - [ ] Better animations
