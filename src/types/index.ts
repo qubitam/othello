@@ -15,6 +15,8 @@ export type GameState = {
     white: number;
   };
   gameOver: boolean;
+  gameMode: string;
+  gameStarted: boolean;
 }
 
 // Position is the position of the piece on the board

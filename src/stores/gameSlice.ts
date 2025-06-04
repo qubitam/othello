@@ -16,6 +16,8 @@ const initialState: GameState = {
 		white: 2,
 	},
 	gameOver: false,
+	gameMode: 'human_vs_human',
+	gameStarted: false,
 }
 
 // GameSlice is the slice of the game
@@ -23,6 +25,22 @@ const gameSlice = createSlice({
 	name: 'game',
 	initialState,
 	reducers: {
+		// Start the game
+		startNewGame: (state, action: PayloadAction<string>) => {
+			const newBoard = createInitialBoard();
+			state.board = newBoard;
+			state.currentPlayer = 'black';
+			state.validMoves = getValidMoves(newBoard, state.currentPlayer);
+			state.score = {
+				black: 2,
+				white: 2,
+			};
+			state.gameOver = false;
+			state.winner = null;
+			state.gameMode = action.payload;
+			state.gameStarted = true;
+		},
+
 		// Reset the game
 		resetGame: (state) => {
 			state.board = createInitialBoard();
@@ -75,13 +93,17 @@ const gameSlice = createSlice({
 				black: state.board.flat().filter(cell => cell === 'black').length,
 				white: state.board.flat().filter(cell => cell === 'white').length,
 			}
+		},
+
+		// Show main menu 
+		showMainMenu: (state) => {
+			state.gameStarted = false;
 		}
-			
 	}
 })  
 
 // Export the actions
-export const { resetGame, makeGameMove } = gameSlice.actions;
+export const { startNewGame, resetGame, makeGameMove, showMainMenu } = gameSlice.actions;
 
 // Export the reducer
 export default gameSlice.reducer;
