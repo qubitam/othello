@@ -45,7 +45,7 @@ Building a complete Othello game to showcase:
 - [x] Game over detection
 
 ### Phase 5: AI Implementation
-- [ ] Simple AI with difficulty levels
+- [x] Simple AI with difficulty levels
 - [x] AI move selection algorithms
 - [x] Human vs AI mode
 - [x] AI vs AI mode
@@ -57,5 +57,10 @@ Building a complete Othello game to showcase:
 - [ ] Game statistics
 - [ ] Online multiplayer
 - [ ] Mobile responsiveness
+- [ ] Hints system with best moves counts using credits system
+- [ ] Time limit for each move
+- [ ] Timer for each turn
+- [ ] Undo move
+- [ ] Redo move
 
 ## Planned Structure
