@@ -1,6 +1,6 @@
 import type { Board, Player } from '../types';
 import { BOARD_SIZE } from '../types';
-
+import cellSound from '../../public/cell_sound.mp3';
 // Get opposite player
 export const getOpponent = (player: Player): Player => {
 	return player === 'black' ? 'white' : 'black';
@@ -130,3 +130,9 @@ export const calculateScores = (board: Board): { black: number, white: number } 
 
 	return { black: blackCount, white: whiteCount };
 }
+
+  // Play cell sound
+  export const playCellSound = () => {
+    const audio = new Audio(cellSound);
+    audio.play();
+  }

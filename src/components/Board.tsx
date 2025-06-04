@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Player, Position } from '../types';
-
+import { playCellSound } from '../utils/gameLogic';
 // BoardProps is the props for the Board component
 interface BoardProps {
 	board: Player[][];
@@ -30,10 +30,12 @@ const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPl
     return false;
   }
 
+
   // Handle cell click with AI turn check
   const handleCellClick = (row: number, col: number) => {
     if (shouldDisableClicks()) return;
     onCellClick(row, col);
+    playCellSound();
   }
 
 	return (

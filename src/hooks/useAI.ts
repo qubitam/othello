@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from './redux';
 import { makeGameMove, setAIThinking } from '../stores/gameSlice';
 import { getAIMove } from '../utils/aiLogic';
-
+import { playCellSound } from '../utils/gameLogic';
 export const useAI = (): void => {
   const dispatch = useAppDispatch();
   const { 
@@ -33,6 +33,7 @@ export const useAI = (): void => {
         
         if (aiMove) {
           dispatch(makeGameMove({ row: aiMove.row, col: aiMove.col }));
+          playCellSound();
         }
         
         dispatch(setAIThinking(false));
