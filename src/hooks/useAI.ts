@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from './redux';
 import { makeGameMove, setAIThinking } from '../stores/gameSlice';
 import { getAIMove } from '../utils/aiLogic';
 import { playCellSound } from '../utils/gameLogic';
+
 export const useAI = (): void => {
   const dispatch = useAppDispatch();
   const { 
@@ -11,13 +12,15 @@ export const useAI = (): void => {
     gameMode, 
     validMoves, 
     gameOver,
+    gameStarted,
     isAIThinking,
     aiDifficulty
   } = useAppSelector(state => state.game);
 
 	// In your useAI hook - add this timer back
 	useEffect(() => {
-    if (gameOver || isAIThinking) {
+    // Don't run AI if game is not started, game is over, or AI is already thinking
+    if (!gameStarted || gameOver || isAIThinking) {
       return;
     }
   
@@ -41,5 +44,5 @@ export const useAI = (): void => {
       
       return () => clearTimeout(timer);
     }
-  }, [currentPlayer, gameMode, gameOver, validMoves]);
+  }, [currentPlayer, gameMode, gameOver, gameStarted, validMoves]);
 };

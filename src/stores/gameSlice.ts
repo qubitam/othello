@@ -78,12 +78,22 @@ const gameSlice = createSlice({
 				return;
 			}
 
-			// Award credits to the current player for making a move
-			if (state.currentPlayer.color === 'black' && state.gameMode !== GAME_MODES.AI_VS_AI) {
-				state.playerCredits.black += CREDITS_PER_MOVE;
-			} else if (state.currentPlayer.color === 'white' && state.gameMode === GAME_MODES.HUMAN_VS_HUMAN) {
-				state.playerCredits.white += CREDITS_PER_MOVE;
+			// Award credits to human players only (not AI)
+			if (state.gameMode === GAME_MODES.HUMAN_VS_HUMAN) {
+				// In human vs human, both players get credits
+				if (state.currentPlayer.color === 'black') {
+					state.playerCredits.black += CREDITS_PER_MOVE;
+				} else {
+					state.playerCredits.white += CREDITS_PER_MOVE;
+				}
+			} else if (state.gameMode === GAME_MODES.HUMAN_VS_AI) {
+				// In human vs AI, only human (black) gets credits
+				if (state.currentPlayer.color === 'black') {
+					state.playerCredits.black += CREDITS_PER_MOVE;
+				}
+				// White (AI) gets no credits
 			}
+			// AI vs AI: no credits for anyone
 
 			// Record the move
 			const move = createMoveRecord(state.currentPlayer, row, col);
@@ -109,6 +119,8 @@ const gameSlice = createSlice({
 		// Show main menu 
 		showMainMenu: (state) => {
 			state.gameStarted = false;
+			state.isAIThinking = false;
+			state.gameOver = true; // This helps stop any ongoing AI operations
 		},
 
 		// Set the AI thinking
