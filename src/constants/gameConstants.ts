@@ -10,6 +10,7 @@ export const INITIAL_SCORE = {
 export const GAME_MODES = {
   HUMAN_VS_HUMAN: 'human_vs_human',
   HUMAN_VS_AI: 'human_vs_ai',
+  AI_VS_AI: 'ai_vs_ai',
 } as const;
 
 // Simple piece color constants
