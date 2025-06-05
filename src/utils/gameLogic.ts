@@ -1,6 +1,7 @@
 import type { Board, Player } from '../types';
 import { BOARD_SIZE } from '../types';
-import cellSound from '../../public/cell_sound.mp3';
+import cellSound from '../assets/cell_sound.mp3';
+
 // Get opposite player
 export const getOpponent = (player: Player): Player => {
 	return player === 'black' ? 'white' : 'black';
