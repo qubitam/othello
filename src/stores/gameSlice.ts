@@ -79,7 +79,7 @@ const gameSlice = createSlice({
 			}
 
 			// Award credits to the current player for making a move
-			if (state.currentPlayer.color === 'black') {
+			if (state.currentPlayer.color === 'black' && state.gameMode === GAME_MODES.HUMAN_VS_HUMAN) {
 				state.playerCredits.black += CREDITS_PER_MOVE;
 			} else if (state.currentPlayer.color === 'white' && state.gameMode === GAME_MODES.HUMAN_VS_HUMAN) {
 				state.playerCredits.white += CREDITS_PER_MOVE;
