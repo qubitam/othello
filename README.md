@@ -53,7 +53,7 @@ Building a complete Othello game to showcase:
 ### Phase 6: Extra Features
 - [ ] Better animations
 - [x] Sound effects
-- [ ] Move history
+- [x] Move history
 - [ ] Game statistics
 - [ ] Online multiplayer
 - [ ] Mobile responsiveness

@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { createInitialBoard } from '../utils/board'
-import type { GameState, AI_DIFFICULTY } from '../types'
+import type { GameState, AI_DIFFICULTY, Move } from '../types'
 import { getValidMoves, makeMove, getWinner, isValidMove, getOpponent, calculateScores } from '../utils/gameLogic';
 
 const initialBoard = createInitialBoard();
@@ -20,6 +20,7 @@ const initialState: GameState = {
 	gameStarted: false,
 	isAIThinking: false,
 	aiDifficulty: 'medium',
+	moveHistory: [] as Move[],
 }
 
 // GameSlice is the slice of the game
@@ -43,6 +44,7 @@ const gameSlice = createSlice({
 			if (aiDifficulty) {
 				state.aiDifficulty = aiDifficulty;
 			}
+			state.moveHistory = [];
 		},
 
 		// Reset the game
@@ -53,6 +55,7 @@ const gameSlice = createSlice({
 			state.validMoves = getValidMoves(state.board, state.currentPlayer);
 			state.score = calculateScores(state.board);
 			state.gameOver = false;
+			state.moveHistory = [];
 		},
 
 		// Place a piece on the board
@@ -64,6 +67,14 @@ const gameSlice = createSlice({
 			if (!isValidMove(state.board, row, col, state.currentPlayer)) {
 				return;
 			}
+
+			// Add the move to the move history
+			const move: Move = {
+				player: state.currentPlayer,
+				position: { row, col },
+				timestamp: Date.now(),
+			}
+			state.moveHistory.push(move);
 
 			// Make the move
 			state.board = makeMove(state.board, row, col, state.currentPlayer);

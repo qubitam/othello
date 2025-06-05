@@ -1,4 +1,5 @@
 import './App.css'
+import { useState } from 'react'
 import { Provider } from 'react-redux'
 import { store } from './stores/store'
 import { useAppDispatch, useAppSelector } from './hooks/redux'
@@ -9,6 +10,7 @@ import Board from './components/Board'
 import Header from './components/Header'
 import TopNavigation from './components/TopNavigation'
 import MainMenu from './components/MainMenu'
+import MoveHistoryModal from './components/MoveHistoryModal'
 const GameContainer = () => {
 	const { 
     board, 
@@ -25,6 +27,9 @@ const GameContainer = () => {
 
   // AI Hook
   useAI();
+
+  // Handle move history modal
+  const [isMoveHistoryModalOpen, setIsMoveHistoryModalOpen] = useState(false);
 
   // Handle cell click
   const handleCellClick = (row: number, col: number) => {
@@ -75,6 +80,7 @@ const GameContainer = () => {
 					getGameModeDisplay={getGameModeDisplay}
 					handleNewGameClick={handleNewGameClick}
 					handleReset={handleReset}
+					handleMoveHistoryClick={() => setIsMoveHistoryModalOpen(true)}
 				/>
         {/* Header */}
         <div className="flex flex-col items-center justify-center">
@@ -90,7 +96,12 @@ const GameContainer = () => {
             gameMode={gameMode}
             isAIThinking={isAIThinking}
           /> 
+          <MoveHistoryModal 
+            isOpen={isMoveHistoryModalOpen}
+            onClose={() => setIsMoveHistoryModalOpen(false)}
+          />
         </div>
+       
       </div>
     </div>
   )

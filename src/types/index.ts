@@ -19,6 +19,7 @@ export type GameState = {
   gameStarted: boolean;
   isAIThinking: boolean;
   aiDifficulty: AI_DIFFICULTY;
+  moveHistory: Move[];
 }
 
 // Position is the position of the piece on the board
@@ -32,3 +33,10 @@ export const BOARD_SIZE = 8;
 
 // AI difficulty
 export type AI_DIFFICULTY = 'easy' | 'medium' | 'hard';
+
+// Move is the move made by the player
+export interface Move {
+  player: Player;
+  position: Position;
+  timestamp: number;
+}
