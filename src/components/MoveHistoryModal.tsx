@@ -73,9 +73,9 @@ const MoveHistoryModal: React.FC<MoveHistoryModalProps> = ({ isOpen, onClose }) 
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-blue-300 font-bold min-w-[2rem]">{index + 1}.</span>
-                    <span className="text-2xl">{move.player === 'black' ? '⚫' : '⚪'}</span>
+                    <span className="text-2xl">{move.player.color === 'black' ? '⚫' : '⚪'}</span>
                     <span className="text-white font-mono text-base">
-                      {formatPosition(move.position.row, move.position.col)}
+                      {formatPosition(move.gamePiece.row, move.gamePiece.col)}
                     </span>
                   </div>
                   <span className="text-gray-400 text-xs">

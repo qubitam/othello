@@ -12,7 +12,7 @@ const initialState: GameState = {
 	board: initialBoard,
 	currentPlayer: PLAYERS.BLACK,
 	winner: null,
-	validMoves: getValidMoves(initialBoard, PLAYERS.BLACK),
+	validMoves: getValidMoves(initialBoard, PLAYERS.BLACK.color),
 	score: {
 		black: INITIAL_SCORE.BLACK,
 		white: INITIAL_SCORE.WHITE,
@@ -37,7 +37,7 @@ const gameSlice = createSlice({
 			const newBoard = createInitialBoard();
 			state.board = newBoard;
 			state.currentPlayer = PLAYERS.BLACK;
-			state.validMoves = getValidMoves(newBoard, state.currentPlayer);
+			state.validMoves = getValidMoves(newBoard, state.currentPlayer.color);
 			state.score = calculateScores(newBoard);
 			state.gameOver = false;
 			state.winner = null;
@@ -54,7 +54,7 @@ const gameSlice = createSlice({
 			state.board = createInitialBoard();
 			state.currentPlayer = PLAYERS.BLACK;
 			state.winner = null;
-			state.validMoves = getValidMoves(state.board, state.currentPlayer);
+			state.validMoves = getValidMoves(state.board, state.currentPlayer.color);
 			state.score = calculateScores(state.board);
 			state.gameOver = false;
 			state.moveHistory = [];
@@ -65,7 +65,7 @@ const gameSlice = createSlice({
 			const { row, col } = action.payload;
 
 			// Early return if move is invalid
-			if (!isValidMove(state.board, row, col, state.currentPlayer)) {
+			if (!isValidMove(state.board, row, col, state.currentPlayer.color)) {
 				return;
 			}
 
@@ -74,11 +74,18 @@ const gameSlice = createSlice({
 			state.moveHistory.push(move);
 
 			// Make the move on the board
-			state.board = makeMove(state.board, row, col, state.currentPlayer);
+			state.board = makeMove(state.board, row, col, state.currentPlayer.color);
 
 			// Determine next game state
 			const nextState = getNextGameState(state.board, state.currentPlayer);
-			state.currentPlayer = nextState.currentPlayer;
+			
+			// Update current player based on next player color
+			if (nextState.nextPlayerColor === 'black') {
+				state.currentPlayer = PLAYERS.BLACK;
+			} else if (nextState.nextPlayerColor === 'white') {
+				state.currentPlayer = PLAYERS.WHITE;
+			}
+			
 			state.validMoves = nextState.validMoves;
 			state.gameOver = nextState.gameOver;
 			state.winner = nextState.winner;

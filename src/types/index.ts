@@ -1,14 +1,28 @@
-// Player can be black, white or empty (empty is used for empty cells)
-export type Player  = 'black' | 'white' | 'empty'
+// Piece colors for the board
+export type PieceColor = 'black' | 'white' | 'empty'
 
-// Board is a 2D array of Player
-export type Board = Player[][];
+// Player object with credits and other properties
+export interface Player {
+  id: string;
+  color: PieceColor;
+  credits: number;
+}
+
+// Game piece that holds color and position
+export interface GamePiece {
+  color: PieceColor;
+  row: number;
+  col: number;
+}
+
+// Board is a 2D array of GamePiece
+export type Board = GamePiece[][];
 
 // GameState is the state of the game
 export type GameState = {
   board: Board;
   currentPlayer: Player;
-  winner: Player | null;
+  winner: PieceColor | null;
   validMoves: Position[];
   score: {
     black: number;
@@ -22,7 +36,7 @@ export type GameState = {
   moveHistory: Move[];
 }
 
-// Position is the position of the piece on the board
+// Position is the position of a piece on the board
 export type Position = {
   row: number;
   col: number;
@@ -37,6 +51,6 @@ export type AI_DIFFICULTY = 'easy' | 'medium' | 'hard';
 // Move is the move made by the player
 export interface Move {
   player: Player;
-  position: Position;
+  gamePiece: GamePiece;
   timestamp: number;
 }

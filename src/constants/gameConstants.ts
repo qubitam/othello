@@ -14,9 +14,9 @@ export const GAME_MODES = {
 
 // Player constants - properly typed
 export const PLAYERS: Record<string, Player> = {
-  BLACK: 'black',
-  WHITE: 'white',
-  EMPTY: 'empty',
+  BLACK: { id: 'black', color: 'black', credits: 0 },   
+  WHITE: { id: 'white', color: 'white', credits: 0 },
+  EMPTY: { id: 'empty', color: 'empty', credits: 0 },
 } as const;
 
 // AI difficulty levels - properly typed

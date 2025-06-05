@@ -1,9 +1,9 @@
 import React from 'react';
-import type { Player, Position } from '../types';
+import type { Player, Position, Board as BoardType } from '../types';
 import { playCellSound } from '../utils/gameLogic';
 // BoardProps is the props for the Board component
 interface BoardProps {
-	board: Player[][];
+	board: BoardType;
 	validMoves: Position[];
 	onCellClick: (row: number, col: number) => void;
 	currentPlayer: Player;
@@ -24,7 +24,7 @@ const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPl
     if (isAIThinking) return true;
     
     // Disable clicks when it's AI's turn
-    if (gameMode === 'human_vs_ai' && currentPlayer === 'white') return true;
+    if (gameMode === 'human_vs_ai' && currentPlayer.color === 'white') return true;
     if (gameMode === 'ai_vs_ai') return true;
     
     return false;
@@ -42,7 +42,7 @@ const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPl
 		<div className="bg-gradient-to-br from-green-900 via-emerald-800 to-green-900 p-4 rounded-3xl shadow-2xl border-2 border-emerald-500/20 backdrop-blur-sm md:min-w-[42rem] max-w-[42rem] md:min-h-[42rem] max-h-[42rem]">
 			<div className="grid grid-cols-8 grid-rows-8 gap-4">
 				{board.flatMap((row, rowIndex) => 
-					row.map((cell, colIndex) => (
+					row.map((piece, colIndex) => (
 						<div 
 							key={`${rowIndex}-${colIndex}`} 
 							className={`w-16 h-16 bg-gradient-to-br from-emerald-600 to-emerald-700 
@@ -56,13 +56,13 @@ const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPl
 								}`}
 							onClick={() => handleCellClick(rowIndex, colIndex)}
 						>
-							{cell !== 'empty' && (
+							{piece.color !== 'empty' && (
 								<div 
 									className={`
 										w-12 h-12 rounded-full border-2 shadow-xl
 										transition-all duration-500 animate-[fadeIn_0.5s_ease-out]
 										hover:scale-110
-										${cell === 'black' 
+										${piece.color === 'black' 
 											? 'bg-gradient-to-br from-gray-600 via-gray-800 to-black border-gray-700 shadow-black/50' 
 											: 'bg-gradient-to-br from-white via-gray-100 to-gray-200 border-gray-400 shadow-white/30'
 										}
@@ -72,7 +72,7 @@ const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPl
 							
 							{isValidMove(rowIndex, colIndex) && (
 								<div className={`w-6 h-6 rounded-full border-2 animate-bounce shadow-lg ${
-									currentPlayer === 'black' 
+									currentPlayer.color === 'black' 
 										? 'bg-black/80 border-black' 
 										: 'bg-white/80 border-white'
 								}`} />

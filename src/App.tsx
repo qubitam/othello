@@ -44,7 +44,9 @@ const GameContainer = () => {
   // Handle going back to main menu
   // Maybe make a better confirmation dialog
   const handleNewGameClick = () => {
-    window.confirm('Are you sure you want to start a new game?') && dispatch(showMainMenu());
+    if (window.confirm('Are you sure you want to start a new game?')) {
+      dispatch(showMainMenu());
+    }
   };
 
   // Handle reset game

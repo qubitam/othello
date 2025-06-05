@@ -1,42 +1,42 @@
-import type { Board, Player, Move } from '../types';
+import type { Board, Player, Move, PieceColor } from '../types';
 import { getValidMoves, getWinner, getOpponent } from './gameLogic';
 
 // Helper to create a move record
 export const createMoveRecord = (player: Player, row: number, col: number): Move => ({
   player,
-  position: { row, col },
+  gamePiece: { color: player.color, row, col },
   timestamp: Date.now(),
 });
 
 // Helper to determine next game state after a move
 export const getNextGameState = (board: Board, currentPlayer: Player) => {
-  const nextPlayer = getOpponent(currentPlayer);
-  const nextValidMoves = getValidMoves(board, nextPlayer);
+  const nextPlayerColor = getOpponent(currentPlayer.color);
+  const nextValidMoves = getValidMoves(board, nextPlayerColor);
   
-  // If next player has moves, switch to them
+  // Returns next player's color and valid moves
   if (nextValidMoves.length > 0) {
     return {
-      currentPlayer: nextPlayer,
+      nextPlayerColor,
       validMoves: nextValidMoves,
       gameOver: false,
-      winner: null as Player | null,
+      winner: null as PieceColor | null,
     };
   }
   
   // Check if current player still has moves
-  const currentValidMoves = getValidMoves(board, currentPlayer);
+  const currentValidMoves = getValidMoves(board, currentPlayer.color);
   if (currentValidMoves.length > 0) {
     return {
-      currentPlayer,
+      nextPlayerColor: currentPlayer.color,
       validMoves: currentValidMoves,
       gameOver: false,
-      winner: null as Player | null,
+      winner: null as PieceColor | null,
     };
   }
   
   // No moves for either player - game over
   return {
-    currentPlayer,
+    nextPlayerColor: currentPlayer.color,
     validMoves: [],
     gameOver: true,
     winner: getWinner(board),

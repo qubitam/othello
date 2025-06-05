@@ -1,12 +1,12 @@
 // Compact Header with emojis - minimal space
 
 import React from 'react';
-import type { Player } from '../types';
+import type { Player, PieceColor } from '../types';
 
 interface HeaderProps {
   currentPlayer: Player;
   score: { black: number; white: number };
-  winner: Player | null;
+  winner: PieceColor | null;
   gameOver: boolean;
   validMovesCount: number;
 }
@@ -28,10 +28,10 @@ const Header: React.FC<HeaderProps> = ({
     }
     
     if (validMovesCount === 0) {
-      return `${currentPlayer} - No moves`;
+      return `${currentPlayer.color} - No moves`;
     }
     
-    return `${currentPlayer}'s Turn`;
+    return `${currentPlayer.color}'s Turn`;
   };
 
 	// Note ** AI Helped in making this component **
@@ -44,7 +44,7 @@ const Header: React.FC<HeaderProps> = ({
         <div className="text-center mb-3">
           <div className="flex items-center justify-center gap-2">
             <div className="text-4xl">
-              {currentPlayer === 'black' ? '⚫' : '⚪'}
+              {currentPlayer.color === 'black' ? '⚫' : '⚪'}
             </div>
             <h2 className="text-xl font-bold text-white capitalize">
               {getStatusMessage()}
@@ -63,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({
           {/* Black Player */}
           <div className={`
             flex items-center gap-1.5 px-3 py-1 rounded-xl transition-all duration-300 flex-1
-            ${currentPlayer === 'black' && !gameOver 
+            ${currentPlayer.color === 'black' && !gameOver 
               ? 'bg-white/20 ring-1 ring-white/30' 
               : 'bg-white/5'
             }
@@ -74,7 +74,7 @@ const Header: React.FC<HeaderProps> = ({
               <div className="text-xl font-bold text-white">{score.black}</div>
               <div className="text-base font-medium text-gray-300">Black</div>
             </div>
-            {currentPlayer === 'black' && !gameOver && (
+            {currentPlayer.color === 'black' && !gameOver && (
               <div className="text-green-400 text-xs">●</div>
             )}
             {winner === 'black' && (
@@ -88,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({
           {/* White Player */}
           <div className={`
             flex items-center gap-1.5 px-3 py-1 rounded-xl transition-all duration-300 flex-1
-            ${currentPlayer === 'white' && !gameOver 
+            ${currentPlayer.color === 'white' && !gameOver 
               ? 'bg-white/20 ring-1 ring-white/30' 
               : 'bg-white/5'
             }
@@ -99,7 +99,7 @@ const Header: React.FC<HeaderProps> = ({
               <div className="text-xl font-bold text-white">{score.white}</div>
               <div className="text-base font-medium text-gray-300">White</div>
             </div>
-            {currentPlayer === 'white' && !gameOver && (
+            {currentPlayer.color === 'white' && !gameOver && (
               <div className="text-green-400 text-xs">●</div>
             )}
             {winner === 'white' && (

@@ -3,7 +3,7 @@ import { getValidMoves, makeMove, calculateScores } from './gameLogic';
 
 // Get the AI move based on the difficulty
 export const getAIMove = (board: Board, player: Player, aiDifficulty: AI_DIFFICULTY): Position | null => {
-	const validMoves = getValidMoves(board, player);
+	const validMoves = getValidMoves(board, player.color);
 
 	if (validMoves.length === 0) return null;
 	console.log(aiDifficulty);
@@ -20,16 +20,15 @@ export const getAIMove = (board: Board, player: Player, aiDifficulty: AI_DIFFICU
 	}
 }
 
-
 const countFlippedPieces = (board: Board, move: Position, player: Player): number => {
 	// Use our makeMove function to simulate the move
-	const newBoard = makeMove(board, move.row, move.col, player);
+	const newBoard = makeMove(board, move.row, move.col, player.color);
 	
 	// Count pieces before and after using our calculateScores function
 	const originalScores = calculateScores(board);
 	const newScores = calculateScores(newBoard);
 	
-	const playerKey = player as 'black' | 'white';
+	const playerKey = player.color as 'black' | 'white';
 	const piecesGained = newScores[playerKey] - originalScores[playerKey];
 	
 	// Subtract 1 because we placed one piece, rest are flipped

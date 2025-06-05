@@ -22,7 +22,7 @@ export const useAI = (): void => {
     }
   
     const shouldAIMove = 
-      (gameMode === 'human_vs_ai' && currentPlayer === 'white') ||
+      (gameMode === 'human_vs_ai' && currentPlayer.color === 'white') ||
       (gameMode === 'ai_vs_ai');
   
     if (shouldAIMove && validMoves.length > 0) {
@@ -41,5 +41,5 @@ export const useAI = (): void => {
       
       return () => clearTimeout(timer);
     }
-  }, [currentPlayer, gameMode, gameOver]);
+  }, [currentPlayer, gameMode, gameOver, validMoves]);
 };

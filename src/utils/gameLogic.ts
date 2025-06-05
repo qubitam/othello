@@ -1,10 +1,10 @@
-import type { Board, Player } from '../types';
+import type { Board, PieceColor } from '../types';
 import { BOARD_SIZE } from '../types';
 import cellSound from '../assets/cell_sound.mp3';
 
-// Get opposite player
-export const getOpponent = (player: Player): Player => {
-	return player === 'black' ? 'white' : 'black';
+// Get opposite piece color
+export const getOpponent = (color: PieceColor): PieceColor => {
+	return color === 'black' ? 'white' : 'black';
 };
 
 // Check if a move is on the board
@@ -12,7 +12,7 @@ export const isOnBoard = (row: number, col: number): boolean => {
 	return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE;
 };
 
-// Note ** AI Helped in making this function **
+// Note ** AI Helped in fixing my direction array **
 // Directions to check
 export const directions = [
 	[-1, -1], // Top-left
@@ -25,7 +25,6 @@ export const directions = [
 	[1, 1],   // Bottom-right
 ];
 
-
 // Note ** AI Helped in making this function **
 // Initially this function was hard coded and placed in the isValidMove function
 // It was a bit messy and hard to maintain, so I decided to move it to a separate function
@@ -34,9 +33,9 @@ export const checkDirection = (
 	row: number,
 	col: number,
 	direction: number[],
-	player: Player
+	color: PieceColor
 ): { row: number; col: number }[] => {
-	const opponent = getOpponent(player);
+	const opponent = getOpponent(color);
 	const toFlip = [];
 
 	// Start from the next position
@@ -44,14 +43,14 @@ export const checkDirection = (
 	let c = col + direction[1];
 
 	// Check if the move is on the board    
-	while (isOnBoard(r, c) && board[r][c] === opponent) {
+	while (isOnBoard(r, c) && board[r][c].color === opponent) {
 		toFlip.push({row: r, col: c});
 		r += direction[0];
 		c += direction[1];
 	}
 
 	// If the move is on the board and the cell is the player's color, return the cells to flip
-	if (isOnBoard(r, c) && board[r][c] === player && toFlip.length > 0) {
+	if (isOnBoard(r, c) && board[r][c].color === color && toFlip.length > 0) {
 		return toFlip;
 	}
 
@@ -59,16 +58,15 @@ export const checkDirection = (
 	return [];
 }
 
-
 // Get all valid moves
 export const getValidMoves = (
-	board: Board, player: Player
+	board: Board, color: PieceColor
 ) => {
 	const validMoves = [];
 
 	for (let row = 0; row < BOARD_SIZE; row++) {
 		for (let col = 0; col < BOARD_SIZE; col++) {
-			if (isValidMove(board, row, col, player)) {
+			if (isValidMove(board, row, col, color)) {
 				validMoves.push({row, col});
 			}
 		}
@@ -82,32 +80,31 @@ export const isValidMove = (
 	board: Board,
 	row: number,
 	col: number,
-	player: Player
+	color: PieceColor
 ): boolean => {
 
 	// Check if the cell is empty
-	if (board[row][col] !== 'empty') return false;
+	if (board[row][col].color !== 'empty') return false;
 	
 	// Check all directions
 	return directions.some((direction) => {
-		return checkDirection(board, row, col, direction, player).length > 0;
+		return checkDirection(board, row, col, direction, color).length > 0;
 	});
 }
 
-
 // Make a move
 export const makeMove = (
-	board: Board, row: number, col: number, player: Player
+	board: Board, row: number, col: number, color: PieceColor
 ): Board => {
-	const newBoard = board.map(row => [...row]);
+	const newBoard = board.map(row => row.map(piece => ({ ...piece })));
 
-	newBoard[row][col] = player;
+	newBoard[row][col] = { color, row, col };
 
 	// Flip pieces
 	for (const direction of directions) {
-		const toFlip = checkDirection(board, row, col, direction, player);
-		for (const {row, col} of toFlip) {
-			newBoard[row][col] = player;
+		const toFlip = checkDirection(board, row, col, direction, color);
+		for (const {row: flipRow, col: flipCol} of toFlip) {
+			newBoard[flipRow][flipCol] = { color, row: flipRow, col: flipCol };
 		}
 	}
 
@@ -115,7 +112,7 @@ export const makeMove = (
 }
 
 // Get the winner
-export const getWinner = (board: Board): Player | null => {
+export const getWinner = (board: Board): PieceColor | null => {
 	const { black, white } = calculateScores(board);
 
 	if (black > white) return 'black';
@@ -126,14 +123,14 @@ export const getWinner = (board: Board): Player | null => {
 
 // Calculate the scores
 export const calculateScores = (board: Board): { black: number, white: number } => {
-	const blackCount = board.flat().filter(cell => cell === 'black').length;
-	const whiteCount = board.flat().filter(cell => cell === 'white').length;
+	const blackCount = board.flat().filter(piece => piece.color === 'black').length;
+	const whiteCount = board.flat().filter(piece => piece.color === 'white').length;
 
 	return { black: blackCount, white: whiteCount };
 }
 
-  // Play cell sound
-  export const playCellSound = () => {
-    const audio = new Audio(cellSound);
-    audio.play();
-  }
+// Play cell sound
+export const playCellSound = () => {
+	const audio = new Audio(cellSound);
+	audio.play();
+}
