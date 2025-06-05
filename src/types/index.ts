@@ -1,11 +1,10 @@
 // Piece colors for the board
 export type PieceColor = 'black' | 'white' | 'empty'
 
-// Player object with credits and other properties
+// Player object for game identification
 export interface Player {
   id: string;
   color: PieceColor;
-  credits: number;
 }
 
 // Game piece that holds color and position
@@ -25,6 +24,10 @@ export type GameState = {
   winner: PieceColor | null;
   validMoves: Position[];
   score: {
+    black: number;
+    white: number;
+  };
+  playerCredits: {
     black: number;
     white: number;
   };

@@ -1,6 +1,28 @@
 import type { Board, Player, Move, PieceColor } from '../types';
 import { getValidMoves, getWinner, getOpponent } from './gameLogic';
 
+// Helper to create a player object dynamically
+export const createPlayer = (color: PieceColor): Player => ({
+  id: color,
+  color,
+});
+
+// Pre-created player instances for the game (simple and clean)
+export const BLACK_PLAYER: Player = {
+  id: 'black',
+  color: 'black',
+};
+
+export const WHITE_PLAYER: Player = {
+  id: 'white',
+  color: 'white',
+};
+
+// Helper to get player by color
+export const getPlayerByColor = (color: PieceColor): Player => {
+  return color === 'black' ? BLACK_PLAYER : WHITE_PLAYER;
+};
+
 // Helper to create a move record
 export const createMoveRecord = (player: Player, row: number, col: number): Move => ({
   player,

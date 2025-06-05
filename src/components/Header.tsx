@@ -6,6 +6,7 @@ import type { Player, PieceColor } from '../types';
 interface HeaderProps {
   currentPlayer: Player;
   score: { black: number; white: number };
+  playerCredits: { black: number; white: number };
   winner: PieceColor | null;
   gameOver: boolean;
   validMovesCount: number;
@@ -14,6 +15,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ 
   currentPlayer, 
   score, 
+  playerCredits,
   winner, 
   gameOver,
   validMovesCount 
@@ -73,6 +75,7 @@ const Header: React.FC<HeaderProps> = ({
             <div className="flex-1">
               <div className="text-xl font-bold text-white">{score.black}</div>
               <div className="text-base font-medium text-gray-300">Black</div>
+              <div className="text-xs text-purple-300">💰 {playerCredits.black} credits</div>
             </div>
             {currentPlayer.color === 'black' && !gameOver && (
               <div className="text-green-400 text-xs">●</div>
@@ -98,6 +101,7 @@ const Header: React.FC<HeaderProps> = ({
             <div className="flex-1">
               <div className="text-xl font-bold text-white">{score.white}</div>
               <div className="text-base font-medium text-gray-300">White</div>
+              <div className="text-xs text-purple-300">💰 {playerCredits.white} credits</div>
             </div>
             {currentPlayer.color === 'white' && !gameOver && (
               <div className="text-green-400 text-xs">●</div>

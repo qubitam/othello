@@ -17,6 +17,7 @@ const GameContainer = () => {
     currentPlayer, 
     validMoves, 
     score, 
+    playerCredits,
     winner,
     gameOver,
     gameMode,
@@ -86,7 +87,14 @@ const GameContainer = () => {
 				/>
         {/* Header */}
         <div className="flex flex-col items-center justify-center">
-          <Header currentPlayer={currentPlayer} score={score} winner={winner} gameOver={gameOver} validMovesCount={validMoves.length} />
+          <Header 
+            currentPlayer={currentPlayer} 
+            score={score} 
+            playerCredits={playerCredits}
+            winner={winner} 
+            gameOver={gameOver} 
+            validMovesCount={validMoves.length} 
+          />
         </div>
         {/* Board */}
         <div className="flex flex-col items-center justify-center">

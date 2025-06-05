@@ -2,20 +2,27 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { createInitialBoard } from '../utils/board'
 import type { GameState, AI_DIFFICULTY, Move } from '../types'
 import { getValidMoves, makeMove, isValidMove, calculateScores } from '../utils/gameLogic';
-import { createMoveRecord, getNextGameState } from '../utils/gameStateHelpers';
-import { INITIAL_SCORE, GAME_MODES, PLAYERS, AI_DIFFICULTIES } from '../constants/gameConstants';
+import { createMoveRecord, getNextGameState, BLACK_PLAYER, getPlayerByColor } from '../utils/gameStateHelpers';
+import { INITIAL_SCORE, GAME_MODES, AI_DIFFICULTIES } from '../constants/gameConstants';
 
 const initialBoard = createInitialBoard();
+
+// Credits awarded per move
+const CREDITS_PER_MOVE = 10;
 
 // Initial state of the game
 const initialState: GameState = {
 	board: initialBoard,
-	currentPlayer: PLAYERS.BLACK,
+	currentPlayer: BLACK_PLAYER,
 	winner: null,
-	validMoves: getValidMoves(initialBoard, PLAYERS.BLACK.color),
+	validMoves: getValidMoves(initialBoard, 'black'),
 	score: {
 		black: INITIAL_SCORE.BLACK,
 		white: INITIAL_SCORE.WHITE,
+	},
+	playerCredits: {
+		black: 0,
+		white: 0,
 	},
 	gameOver: false,
 	gameMode: GAME_MODES.HUMAN_VS_HUMAN,
@@ -36,9 +43,10 @@ const gameSlice = createSlice({
 
 			const newBoard = createInitialBoard();
 			state.board = newBoard;
-			state.currentPlayer = PLAYERS.BLACK;
+			state.currentPlayer = BLACK_PLAYER;
 			state.validMoves = getValidMoves(newBoard, state.currentPlayer.color);
 			state.score = calculateScores(newBoard);
+			state.playerCredits = { black: 0, white: 0 };
 			state.gameOver = false;
 			state.winner = null;
 			state.gameMode = mode;
@@ -52,10 +60,11 @@ const gameSlice = createSlice({
 		// Reset the game
 		resetGame: (state) => {
 			state.board = createInitialBoard();
-			state.currentPlayer = PLAYERS.BLACK;
+			state.currentPlayer = BLACK_PLAYER;
 			state.winner = null;
 			state.validMoves = getValidMoves(state.board, state.currentPlayer.color);
 			state.score = calculateScores(state.board);
+			state.playerCredits = { black: 0, white: 0 };
 			state.gameOver = false;
 			state.moveHistory = [];
 		},
@@ -69,6 +78,13 @@ const gameSlice = createSlice({
 				return;
 			}
 
+			// Award credits to the current player for making a move
+			if (state.currentPlayer.color === 'black') {
+				state.playerCredits.black += CREDITS_PER_MOVE;
+			} else {
+				state.playerCredits.white += CREDITS_PER_MOVE;
+			}
+
 			// Record the move
 			const move = createMoveRecord(state.currentPlayer, row, col);
 			state.moveHistory.push(move);
@@ -80,11 +96,7 @@ const gameSlice = createSlice({
 			const nextState = getNextGameState(state.board, state.currentPlayer);
 			
 			// Update current player based on next player color
-			if (nextState.nextPlayerColor === 'black') {
-				state.currentPlayer = PLAYERS.BLACK;
-			} else if (nextState.nextPlayerColor === 'white') {
-				state.currentPlayer = PLAYERS.WHITE;
-			}
+			state.currentPlayer = getPlayerByColor(nextState.nextPlayerColor);
 			
 			state.validMoves = nextState.validMoves;
 			state.gameOver = nextState.gameOver;

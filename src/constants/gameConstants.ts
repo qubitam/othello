@@ -1,4 +1,4 @@
-import type { Player, AI_DIFFICULTY } from '../types';
+import type { AI_DIFFICULTY } from '../types';
 
 // Game configuration constants
 export const INITIAL_SCORE = {
@@ -12,11 +12,11 @@ export const GAME_MODES = {
   HUMAN_VS_AI: 'human_vs_ai',
 } as const;
 
-// Player constants - properly typed
-export const PLAYERS: Record<string, Player> = {
-  BLACK: { id: 'black', color: 'black', credits: 0 },   
-  WHITE: { id: 'white', color: 'white', credits: 0 },
-  EMPTY: { id: 'empty', color: 'empty', credits: 0 },
+// Simple piece color constants
+export const PIECE_COLORS = {
+  BLACK: 'black',
+  WHITE: 'white',
+  EMPTY: 'empty',
 } as const;
 
 // AI difficulty levels - properly typed
