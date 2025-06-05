@@ -1,25 +1,27 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { createInitialBoard } from '../utils/board'
 import type { GameState, AI_DIFFICULTY, Move } from '../types'
-import { getValidMoves, makeMove, getWinner, isValidMove, getOpponent, calculateScores } from '../utils/gameLogic';
+import { getValidMoves, makeMove, isValidMove, calculateScores } from '../utils/gameLogic';
+import { createMoveRecord, getNextGameState } from '../utils/gameStateHelpers';
+import { INITIAL_SCORE, GAME_MODES, PLAYERS, AI_DIFFICULTIES } from '../constants/gameConstants';
 
 const initialBoard = createInitialBoard();
 
 // Initial state of the game
 const initialState: GameState = {
 	board: initialBoard,
-	currentPlayer: 'black',
+	currentPlayer: PLAYERS.BLACK,
 	winner: null,
-	validMoves: getValidMoves(initialBoard, 'black'),
+	validMoves: getValidMoves(initialBoard, PLAYERS.BLACK),
 	score: {
-		black: 2,
-		white: 2,
+		black: INITIAL_SCORE.BLACK,
+		white: INITIAL_SCORE.WHITE,
 	},
 	gameOver: false,
-	gameMode: 'human_vs_human',
+	gameMode: GAME_MODES.HUMAN_VS_HUMAN,
 	gameStarted: false,
 	isAIThinking: false,
-	aiDifficulty: 'medium',
+	aiDifficulty: AI_DIFFICULTIES.MEDIUM,
 	moveHistory: [] as Move[],
 }
 
@@ -34,7 +36,7 @@ const gameSlice = createSlice({
 
 			const newBoard = createInitialBoard();
 			state.board = newBoard;
-			state.currentPlayer = 'black';
+			state.currentPlayer = PLAYERS.BLACK;
 			state.validMoves = getValidMoves(newBoard, state.currentPlayer);
 			state.score = calculateScores(newBoard);
 			state.gameOver = false;
@@ -50,7 +52,7 @@ const gameSlice = createSlice({
 		// Reset the game
 		resetGame: (state) => {
 			state.board = createInitialBoard();
-			state.currentPlayer = 'black';
+			state.currentPlayer = PLAYERS.BLACK;
 			state.winner = null;
 			state.validMoves = getValidMoves(state.board, state.currentPlayer);
 			state.score = calculateScores(state.board);
@@ -58,47 +60,28 @@ const gameSlice = createSlice({
 			state.moveHistory = [];
 		},
 
-		// Place a piece on the board
+		// Place a piece on the board (refactored to be shorter)
 		makeGameMove: (state, action: PayloadAction<{ row: number, col: number }>) => {
-			// Get the row and column from the payload
 			const { row, col } = action.payload;
 
-			// Check if the move is valid
+			// Early return if move is invalid
 			if (!isValidMove(state.board, row, col, state.currentPlayer)) {
 				return;
 			}
 
-			// Add the move to the move history
-			const move: Move = {
-				player: state.currentPlayer,
-				position: { row, col },
-				timestamp: Date.now(),
-			}
+			// Record the move
+			const move = createMoveRecord(state.currentPlayer, row, col);
 			state.moveHistory.push(move);
 
-			// Make the move
+			// Make the move on the board
 			state.board = makeMove(state.board, row, col, state.currentPlayer);
 
-			// Switch the current player
-			const nextPlayer = getOpponent(state.currentPlayer);
-			const nextValidMoves = getValidMoves(state.board, nextPlayer);
-
-			// If there are valid moves, switch to the next player
-			if (nextValidMoves.length > 0) {
-				state.currentPlayer = nextPlayer;
-				state.validMoves = nextValidMoves;
-			} else {
-				// Check if the current player has valid moves if not, the game is over
-				const currentMoves = getValidMoves(state.board, state.currentPlayer);
-				// If there are valid moves, switch to the current player
-				if (currentMoves.length > 0) {
-					state.validMoves = currentMoves;
-				} else {
-					state.validMoves = [];
-					state.winner = getWinner(state.board);
-					state.gameOver = true;
-				}
-			}
+			// Determine next game state
+			const nextState = getNextGameState(state.board, state.currentPlayer);
+			state.currentPlayer = nextState.currentPlayer;
+			state.validMoves = nextState.validMoves;
+			state.gameOver = nextState.gameOver;
+			state.winner = nextState.winner;
 
 			// Update the score
 			state.score = calculateScores(state.board);
