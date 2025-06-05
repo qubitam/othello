@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Provider } from 'react-redux'
 import { store } from './stores/store'
 import { useAppDispatch, useAppSelector } from './hooks/redux'
-import { startNewGame, resetGame, makeGameMove, showMainMenu } from './stores/gameSlice'
+import { startNewGame, resetGame, makeGameMove, showMainMenu, getHint } from './stores/gameSlice'
 import { useAI } from './hooks/useAI'
 import type { AI_DIFFICULTY } from './types'
 import Board from './components/Board'
@@ -18,6 +18,7 @@ const GameContainer = () => {
     validMoves, 
     score, 
     playerCredits,
+    hintPosition,
     winner,
     gameOver,
     gameMode,
@@ -54,7 +55,12 @@ const GameContainer = () => {
   const handleReset = () => {
     dispatch(resetGame());
   }
-  
+
+  // Handle get hint
+  const handleGetHint = () => {
+    dispatch(getHint());
+  }
+
   // Get game mode display for top navigation
   const getGameModeDisplay = () => {
     switch(gameMode) {
@@ -77,7 +83,7 @@ const GameContainer = () => {
   // Render game if game is started
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 to-pink-900 text-white min-w-screen flex items-center justify-center">
-      <div className="max-w-screen-lg mx-auto space-y-6">
+      <div className="max-w-screen-lg mx-auto space-y-3">
         {/* Top navigation */}
 				<TopNavigation 
 					getGameModeDisplay={getGameModeDisplay}
@@ -94,6 +100,9 @@ const GameContainer = () => {
             winner={winner} 
             gameOver={gameOver} 
             validMovesCount={validMoves.length} 
+            gameMode={gameMode}
+            hintPosition={hintPosition}
+            onGetHint={handleGetHint}
           />
         </div>
         {/* Board */}
@@ -105,6 +114,7 @@ const GameContainer = () => {
             currentPlayer={currentPlayer}
             gameMode={gameMode}
             isAIThinking={isAIThinking}
+            hintPosition={hintPosition}
           /> 
           <MoveHistoryModal 
             isOpen={isMoveHistoryModalOpen}

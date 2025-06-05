@@ -51,13 +51,13 @@ Building a complete Othello game to showcase:
 - [x] AI vs AI mode
 
 ### Phase 6: Extra Features
-- [ ] Better animations
+- [x] Better animations
 - [x] Sound effects
 - [x] Move history
 - [ ] Game statistics
 - [ ] Online multiplayer
 - [ ] Mobile responsiveness
-- [ ] Hints system with best moves counts using credits system
+- [x] Hints system with best moves counts using credits system
 - [ ] Time limit for each move
 - [ ] Timer for each turn
 - [ ] Undo move

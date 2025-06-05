@@ -3,12 +3,14 @@ import { createInitialBoard } from '../utils/board'
 import type { GameState, AI_DIFFICULTY, Move } from '../types'
 import { getValidMoves, makeMove, isValidMove, calculateScores } from '../utils/gameLogic';
 import { createMoveRecord, getNextGameState, BLACK_PLAYER, getPlayerByColor } from '../utils/gameStateHelpers';
+import { getBestMoveByFlippedPieces } from '../utils/aiLogic';
 import { INITIAL_SCORE, GAME_MODES, AI_DIFFICULTIES } from '../constants/gameConstants';
 
 const initialBoard = createInitialBoard();
 
 // Credits awarded per move
 const CREDITS_PER_MOVE = 10;
+const HINT_COST = 20;
 
 // Initial state of the game
 const initialState: GameState = {
@@ -24,6 +26,7 @@ const initialState: GameState = {
 		black: 0,
 		white: 0,
 	},
+	hintPosition: null,
 	gameOver: false,
 	gameMode: GAME_MODES.HUMAN_VS_HUMAN,
 	gameStarted: false,
@@ -47,6 +50,7 @@ const gameSlice = createSlice({
 			state.validMoves = getValidMoves(newBoard, state.currentPlayer.color);
 			state.score = calculateScores(newBoard);
 			state.playerCredits = { black: 0, white: 0 };
+			state.hintPosition = null;
 			state.gameOver = false;
 			state.winner = null;
 			state.gameMode = mode;
@@ -65,13 +69,44 @@ const gameSlice = createSlice({
 			state.validMoves = getValidMoves(state.board, state.currentPlayer.color);
 			state.score = calculateScores(state.board);
 			state.playerCredits = { black: 0, white: 0 };
+			state.hintPosition = null;
 			state.gameOver = false;
 			state.moveHistory = [];
 		},
 
-		// Place a piece on the board (refactored to be shorter)
+		// Get hint for current player (costs 20 credits)
+		getHint: (state) => {
+			const currentPlayerColor = state.currentPlayer.color;
+			
+			// Check if player has enough credits and it's their turn
+			if (state.gameOver || 
+				(currentPlayerColor === 'black' && state.playerCredits.black < HINT_COST) ||
+				(currentPlayerColor === 'white' && state.playerCredits.white < HINT_COST)) {
+				return;
+			}
+
+			// Use the existing AI logic to find the best move
+			if (state.validMoves.length > 0) {
+				const bestMove = getBestMoveByFlippedPieces(state.board, state.validMoves, state.currentPlayer);
+				
+				// Deduct credits
+				if (currentPlayerColor === 'black') {
+					state.playerCredits.black -= HINT_COST;
+				} else {
+					state.playerCredits.white -= HINT_COST;
+				}
+				
+				// Set hint position
+				state.hintPosition = bestMove;
+			}
+		},
+
+		// Make game move and clear hint
 		makeGameMove: (state, action: PayloadAction<{ row: number, col: number }>) => {
 			const { row, col } = action.payload;
+
+			// Clear any existing hint
+			state.hintPosition = null;
 
 			// Early return if move is invalid
 			if (!isValidMove(state.board, row, col, state.currentPlayer.color)) {
@@ -131,12 +166,12 @@ const gameSlice = createSlice({
 		// Set the AI difficulty
 		setAIDifficulty: (state, action: PayloadAction<AI_DIFFICULTY>) => {
 			state.aiDifficulty = action.payload;
-		}
+		},
 	}
 })  
 
 // Export the actions
-export const { startNewGame, resetGame, makeGameMove, showMainMenu, setAIThinking, setAIDifficulty } = gameSlice.actions;
+export const { startNewGame, resetGame, makeGameMove, showMainMenu, setAIThinking, setAIDifficulty, getHint } = gameSlice.actions;
 
 // Export the reducer
 export default gameSlice.reducer;

@@ -10,6 +10,9 @@ interface HeaderProps {
   winner: PieceColor | null;
   gameOver: boolean;
   validMovesCount: number;
+  gameMode: string;
+  hintPosition: { row: number; col: number } | null;
+  onGetHint: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ 
@@ -18,7 +21,10 @@ const Header: React.FC<HeaderProps> = ({
   playerCredits,
   winner, 
   gameOver,
-  validMovesCount 
+  validMovesCount,
+  gameMode,
+  hintPosition,
+  onGetHint
 }) => {
   const getStatusMessage = (): string => {
     if (gameOver) {
@@ -36,14 +42,32 @@ const Header: React.FC<HeaderProps> = ({
     return `${currentPlayer.color}'s Turn`;
   };
 
+  const canUseHint = (): boolean => {
+    if (gameOver || validMovesCount === 0) return false;
+    
+    const currentPlayerCredits = currentPlayer.color === 'black' 
+      ? playerCredits.black 
+      : playerCredits.white;
+    
+    // Check if it's a human player turn and they have enough credits
+    if (gameMode === 'human_vs_human') {
+      return currentPlayerCredits >= 20;
+    } else if (gameMode === 'human_vs_ai') {
+      // Only black (human) can use hints
+      return currentPlayer.color === 'black' && currentPlayerCredits >= 20;
+    }
+    
+    return false; // AI vs AI - no hints
+  };
+
 	// Note ** AI Helped in making this component **
 
   return (
     <div className="flex flex-col items-center">
       {/* Compact Header Card */}
-      <div className="w-[33rem] md:w-[42rem] bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-3 shadow-lg">
+      <div className="w-[33rem] md:w-[42rem] bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-2 shadow-lg">
         {/* Current Status - Very Compact */}
-        <div className="text-center mb-3">
+        <div className="text-center mb-2">
           <div className="flex items-center justify-center gap-2">
             <div className="text-4xl">
               {currentPlayer.color === 'black' ? '⚫' : '⚪'}
@@ -57,6 +81,18 @@ const Header: React.FC<HeaderProps> = ({
             <p className="text-purple-200/70 text-sm mt-0.5">
               {validMovesCount} moves available
             </p>
+          )}
+
+          {/* Hint Button */}
+          {canUseHint() && (
+            <div className="mt-2">
+                <button
+                  onClick={onGetHint}
+                  className="bg-yellow-500/20 hover:bg-yellow-500/30 border border-yellow-400/40 text-yellow-300 px-2 py-1 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 animate-bounce"
+                >
+                  💡 Get Hint (-20 💰)
+                </button>
+            </div>
           )}
         </div>
 

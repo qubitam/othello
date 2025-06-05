@@ -9,14 +9,20 @@ interface BoardProps {
 	currentPlayer: Player;
 	gameMode: string;
 	isAIThinking: boolean;
+	hintPosition: Position | null;
 }
 
 // Board component
-const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPlayer, gameMode, isAIThinking }) => {
+const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPlayer, gameMode, isAIThinking, hintPosition }) => {
 	
 	// Check if a cell is a valid move
   const isValidMove = (row: number, col: number) => {
     return validMoves.some((move) => move.row === row && move.col === col);
+  }
+
+  // Check if a cell is the hint position
+  const isHintPosition = (row: number, col: number) => {
+    return hintPosition && hintPosition.row === row && hintPosition.col === col;
   }
 
   // Check if clicks should be disabled (AI turn)
@@ -53,6 +59,10 @@ const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPl
 								${isValidMove(rowIndex, colIndex) 
 									? 'from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 shadow-lg shadow-cyan-500/50 animate-pulse' 
 									: ''
+								}
+								${isHintPosition(rowIndex, colIndex)
+									? 'from-yellow-400 to-yellow-600 hover:from-yellow-300 hover:to-yellow-500 shadow-lg shadow-yellow-500/50 ring-2 ring-yellow-300 animate-pulse'
+									: ''
 								}`}
 							onClick={() => handleCellClick(rowIndex, colIndex)}
 						>
@@ -76,6 +86,12 @@ const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPl
 										? 'bg-black/80 border-black' 
 										: 'bg-white/80 border-white'
 								}`} />
+							)}
+
+							{isHintPosition(rowIndex, colIndex) && (
+								<div className="absolute -top-1 -right-1 bg-yellow-400 text-black text-xs font-bold px-1 py-0.5 rounded-full shadow-lg animate-bounce">
+									BEST
+								</div>
 							)}
 						</div>
 					))

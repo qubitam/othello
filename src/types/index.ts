@@ -31,6 +31,7 @@ export type GameState = {
     black: number;
     white: number;
   };
+  hintPosition: Position | null;
   gameOver: boolean;
   gameMode: string;
   gameStarted: boolean;

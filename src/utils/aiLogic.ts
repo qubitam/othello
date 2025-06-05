@@ -36,7 +36,7 @@ const countFlippedPieces = (board: Board, move: Position, player: Player): numbe
 };
 
 // Find move that flips the most pieces (Medium difficulty)
-const getBestMoveByFlippedPieces = (board: Board, validMoves: Position[], player: Player): Position => {
+export const getBestMoveByFlippedPieces = (board: Board, validMoves: Position[], player: Player): Position => {
 	let bestMove = validMoves[0];
 	let mostFlipped = -1;
 	
