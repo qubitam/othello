@@ -23,7 +23,6 @@ const Header: React.FC<HeaderProps> = ({
   gameOver,
   validMovesCount,
   gameMode,
-  hintPosition,
   onGetHint
 }) => {
   const getStatusMessage = (): string => {
