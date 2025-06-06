@@ -33,6 +33,8 @@ const initialState: GameState = {
 	isAIThinking: false,
 	aiDifficulty: AI_DIFFICULTIES.MEDIUM,
 	moveHistory: [] as Move[],
+	historyViewIndex: -1,
+	isViewingHistory: false,
 }
 
 // GameSlice is the slice of the game
@@ -59,6 +61,8 @@ const gameSlice = createSlice({
 				state.aiDifficulty = aiDifficulty;
 			}
 			state.moveHistory = [];
+			state.historyViewIndex = -1;
+			state.isViewingHistory = false;
 		},
 
 		// Reset the game
@@ -72,6 +76,8 @@ const gameSlice = createSlice({
 			state.hintPosition = null;
 			state.gameOver = false;
 			state.moveHistory = [];
+			state.historyViewIndex = -1;
+			state.isViewingHistory = false;
 		},
 
 		// Get hint for current player (costs 20 credits)
@@ -167,11 +173,26 @@ const gameSlice = createSlice({
 		setAIDifficulty: (state, action: PayloadAction<AI_DIFFICULTY>) => {
 			state.aiDifficulty = action.payload;
 		},
+
+		// Set history view for navigation
+		setHistoryView: (state, action: PayloadAction<{ index: number }>) => {
+			const { index } = action.payload;
+			if (index === -1) {
+				// Return to current game
+				state.historyViewIndex = -1;
+				state.isViewingHistory = false;
+			} else if (index >= 0 && index < state.moveHistory.length) {
+				console.log('Setting history view to', index);
+				// View specific move
+				state.historyViewIndex = index;
+				state.isViewingHistory = true;
+			}
+		},
 	}
 })  
 
 // Export the actions
-export const { startNewGame, resetGame, makeGameMove, showMainMenu, setAIThinking, setAIDifficulty, getHint } = gameSlice.actions;
+export const { startNewGame, resetGame, makeGameMove, showMainMenu, setAIThinking, setAIDifficulty, getHint, setHistoryView } = gameSlice.actions;
 
 // Export the reducer
 export default gameSlice.reducer;

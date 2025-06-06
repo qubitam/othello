@@ -38,6 +38,9 @@ export type GameState = {
   isAIThinking: boolean;
   aiDifficulty: AI_DIFFICULTY;
   moveHistory: Move[];
+  // History navigation
+  historyViewIndex: number; // -1 means current game, 0+ means viewing that move
+  isViewingHistory: boolean;
 }
 
 // Position is the position of a piece on the board

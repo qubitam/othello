@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Provider } from 'react-redux'
 import { store } from './stores/store'
 import { useAppDispatch, useAppSelector } from './hooks/redux'
-import { startNewGame, resetGame, makeGameMove, showMainMenu, getHint } from './stores/gameSlice'
+import { startNewGame, resetGame, makeGameMove, showMainMenu, getHint, setHistoryView } from './stores/gameSlice'
 import { useAI } from './hooks/useAI'
 import type { AI_DIFFICULTY } from './types'
 import Board from './components/Board'
@@ -23,7 +23,10 @@ const GameContainer = () => {
     gameOver,
     gameMode,
     gameStarted,
-    isAIThinking
+    isAIThinking,
+    moveHistory,
+    historyViewIndex,
+    isViewingHistory
   } = useAppSelector((state) => state.game);
 	const dispatch = useAppDispatch();
 
@@ -103,6 +106,7 @@ const GameContainer = () => {
             gameMode={gameMode}
             hintPosition={hintPosition}
             onGetHint={handleGetHint}
+            isViewingHistory={isViewingHistory}
           />
         </div>
         {/* Board */}
@@ -119,6 +123,9 @@ const GameContainer = () => {
           <MoveHistoryModal 
             isOpen={isMoveHistoryModalOpen}
             onClose={() => setIsMoveHistoryModalOpen(false)}
+            moveHistory={moveHistory}
+            currentHistoryIndex={historyViewIndex}
+            onHistoryNavigate={(index) => dispatch(setHistoryView({ index }))}
           />
         </div>
        

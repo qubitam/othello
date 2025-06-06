@@ -13,6 +13,7 @@ interface HeaderProps {
   gameMode: string;
   hintPosition: { row: number; col: number } | null;
   onGetHint: () => void;
+  isViewingHistory: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({ 
@@ -23,7 +24,8 @@ const Header: React.FC<HeaderProps> = ({
   gameOver,
   validMovesCount,
   gameMode,
-  onGetHint
+  onGetHint,
+  isViewingHistory
 }) => {
   const [showWinningModal, setShowWinningModal] = useState(false);
 
@@ -62,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   const isHintButtonEnabled = (playerColor: PieceColor): boolean => {
-    if (gameOver || validMovesCount === 0) return false;
+    if (gameOver || validMovesCount === 0 || isViewingHistory) return false;
     
     const currentPlayerCredits = playerColor === 'black' 
       ? playerCredits.black 

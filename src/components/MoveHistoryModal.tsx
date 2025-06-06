@@ -1,15 +1,23 @@
 import React, { useEffect } from 'react';
 import { useAppSelector } from '../hooks/redux';
+import type { Move } from '../types';
 
 interface MoveHistoryModalProps {
   isOpen: boolean;
   onClose: () => void;
+  moveHistory: Move[];
+  currentHistoryIndex: number;
+  onHistoryNavigate: (index: number) => void;
 }
 
 // MoveHistoryModal is the modal that displays the move history
-const MoveHistoryModal: React.FC<MoveHistoryModalProps> = ({ isOpen, onClose }) => {
-  const moveHistory = useAppSelector(state => state.game.moveHistory);
-
+const MoveHistoryModal: React.FC<MoveHistoryModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  moveHistory, 
+  currentHistoryIndex, 
+  onHistoryNavigate 
+}) => {
   // Handle ESC key to close modal
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -61,6 +69,50 @@ const MoveHistoryModal: React.FC<MoveHistoryModalProps> = ({ isOpen, onClose }) 
           </button>
         </div>
         
+        {/* Navigation Controls */}
+        {moveHistory.length > 0 && (
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <button
+              onClick={() => onHistoryNavigate(-1)}
+              className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                currentHistoryIndex === -1 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-white/10 hover:bg-white/20 text-white'
+              }`}
+            >
+              Current Game
+            </button>
+            <button
+              onClick={() => onHistoryNavigate(0)}
+              disabled={moveHistory.length === 0}
+              className="px-2 py-1 bg-white/10 hover:bg-white/20 rounded text-sm disabled:opacity-50"
+            >
+              ⏮️
+            </button>
+            <button
+              onClick={() => onHistoryNavigate(Math.max(0, currentHistoryIndex - 1))}
+              disabled={currentHistoryIndex <= 0}
+              className="px-2 py-1 bg-white/10 hover:bg-white/20 rounded text-sm disabled:opacity-50"
+            >
+              ⏪
+            </button>
+            <button
+              onClick={() => onHistoryNavigate(Math.min(moveHistory.length - 1, currentHistoryIndex + 1))}
+              disabled={currentHistoryIndex >= moveHistory.length - 1}
+              className="px-2 py-1 bg-white/10 hover:bg-white/20 rounded text-sm disabled:opacity-50"
+            >
+              ⏩
+            </button>
+            <button
+              onClick={() => onHistoryNavigate(moveHistory.length - 1)}
+              disabled={moveHistory.length === 0}
+              className="px-2 py-1 bg-white/10 hover:bg-white/20 rounded text-sm disabled:opacity-50"
+            >
+              ⏭️
+            </button>
+          </div>
+        )}
+        
         <div className="max-h-64 overflow-y-auto">
           {moveHistory.length === 0 ? (
             <p className="text-gray-400 text-sm text-center py-4">No moves yet</p>
@@ -69,7 +121,12 @@ const MoveHistoryModal: React.FC<MoveHistoryModalProps> = ({ isOpen, onClose }) 
               {moveHistory.map((move, index) => (
                 <div 
                   key={index} 
-                  className="flex items-center justify-between text-sm bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors"
+                  className={`flex items-center justify-between text-sm rounded-lg p-3 transition-colors cursor-pointer ${
+                    currentHistoryIndex === index 
+                      ? 'bg-blue-600/30 border border-blue-400' 
+                      : 'bg-white/5 hover:bg-white/10'
+                  }`}
+                  onClick={() => onHistoryNavigate(index)}
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-blue-300 font-bold min-w-[2rem]">{index + 1}.</span>
@@ -88,7 +145,12 @@ const MoveHistoryModal: React.FC<MoveHistoryModalProps> = ({ isOpen, onClose }) 
         </div>
         
         <div className="mt-4 text-center">
-          <p className="text-gray-400 text-xs">Press ESC or click outside to close</p>
+          <p className="text-gray-400 text-xs">
+            {currentHistoryIndex === -1 
+              ? 'Viewing current game • Click moves to navigate' 
+              : `Viewing after move ${currentHistoryIndex + 1} • Press ESC to close`
+            }
+          </p>
         </div>
       </div>
     </div>

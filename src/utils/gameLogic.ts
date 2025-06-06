@@ -1,5 +1,6 @@
-import type { Board, PieceColor } from '../types';
+import type { Board, PieceColor, Move } from '../types';
 import { BOARD_SIZE } from '../types';
+import { createInitialBoard } from './board';
 import cellSound from '../assets/cell_sound.mp3';
 
 // Get opposite piece color
@@ -134,3 +135,17 @@ export const playCellSound = () => {
 	const audio = new Audio(cellSound);
 	audio.play();
 }
+
+// Reconstruct board state at a specific point in history
+export const getBoardAtHistoryIndex = (moveHistory: Move[], targetIndex: number): Board => {
+	// Start with initial board
+	let board = createInitialBoard();
+	
+	// Replay moves up to targetIndex (inclusive)
+	for (let i = 0; i <= targetIndex && i < moveHistory.length; i++) {
+		const move = moveHistory[i];
+		board = makeMove(board, move.gamePiece.row, move.gamePiece.col, move.player.color);
+	}
+	
+	return board;
+};

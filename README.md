@@ -51,20 +51,32 @@ Building a complete Othello game to showcase:
 - [x] AI vs AI mode
 
 ### Phase 6: Extra Features
-- [x] Better animations
-- [x] Sound effects
-- [x] Move history
-- [ ] Game statistics
+- [x] Better animations and visual feedback
+- [x] Sound effects for piece placement  
+- [x] Interactive move history with time travel
+- [x] Credits system (10 credits per move, 20 for hints)
+- [x] AI thinking indicators
+- [x] Hints system showing best moves
+- [ ] Game statistics and player profiles
 - [ ] Online multiplayer
-- [ ] Mobile responsiveness
-- [x] Hints system with best moves counts using credits system
-- [ ] Time limit for each move
-- [ ] Timer for each turn
-- [ ] Undo move
-- [ ] Redo move
-- [ ] Flipping Effect
+- [ ] Time limits and turn timers
+- [ ] Undo/Redo functionality  
+- [ ] Piece flipping animations
+- [ ] Mobile responsiveness (partially done)
 
+### Advanced Features - Interactive Move History
 
+**Time Travel Functionality**
+- Click any move in history to see exact board state at that moment
+- Navigation controls: Current Game, First Move, Previous, Next, Last Move  
+- Board automatically reconstructs by replaying moves from initial position
+- Visual indicator shows when viewing history vs current game
+- Chess-style move notation (A1, B2, etc.) with timestamps
+
+**Technical Implementation**
+- Efficient state reconstruction - rebuilds board from move history instead of storing every state
+- Clean separation between current game and history viewing modes
+- Prevents moves while viewing history with proper state management
 
 # My Implementation Analysis
 
@@ -89,6 +101,7 @@ Building a complete Othello game to showcase:
   - Hard: Smart strategy with corner preference and avoiding dangerous X-squares  
 - AI thinking state with visual feedback to users  
 - Proper timing delays to make AI moves feel natural  
+
 
 ### User Experience Features
 - Credits system that rewards players for moves (10 credits per move)  
@@ -119,11 +132,10 @@ Building a complete Othello game to showcase:
 - Could add more unit tests for game logic functions  
 
 #### User Experience
-- Mobile responsiveness is not implemented yet  
+- Mobile responsiveness is partially done 
 - No undo/redo functionality  
 - No timer for moves or turn limits  
 - Confirmation dialogs are basic browser alerts - could be custom modals  
-- No game statistics or player profiles  
 
 #### Performance
 - AI calculations could be optimized for larger boards or deeper analysis  
@@ -139,7 +151,13 @@ Building a complete Othello game to showcase:
 
 ## My Development Approach
 I started with basic game board and pieces, then built the core Othello logic step by step. Used Redux for state management from the beginning which made adding features like AI, hints, and move history easier. When I got stuck on complex logic like direction checking or AI strategy, I got help to understand the algorithms better.  
+
 The hardest part was making sure all the game rules worked correctly and handling all the different game states properly. Testing different scenarios manually took time but helped catch bugs early.  
-I also extended the project to include a credits and hints system to demonstrate how the logic could be expanded and how the solution could be made monetizable.  
+
+I also added a credits and hints system to show how the game could be extended with monetizable features
+
 Overall, I'm happy with the clean code structure and the features I managed to implement, but there's definitely room for improvement in performance, mobile support, and additional game features.
+
+The move history with time travel was one of the cooler features to implement. Instead of storing every board state (which would use lots of memory), I decided to reconstruct board states by replaying moves from the beginning. This was much more efficient. The hardest part was managing the different viewing states and making sure users couldn't make moves while viewing history.
+
 
