@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Player, Position, Board as BoardType } from '../types';
 import { playCellSound } from '../utils/gameLogic';
-// BoardProps is the props for the Board component
+
 interface BoardProps {
 	board: BoardType;
 	validMoves: Position[];
@@ -12,32 +12,23 @@ interface BoardProps {
 	hintPosition: Position | null;
 }
 
-// Board component
 const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPlayer, gameMode, isAIThinking, hintPosition }) => {
 	
-	// Check if a cell is a valid move
   const isValidMove = (row: number, col: number) => {
     return validMoves.some((move) => move.row === row && move.col === col);
   }
 
-  // Check if a cell is the hint position
   const isHintPosition = (row: number, col: number) => {
     return hintPosition && hintPosition.row === row && hintPosition.col === col;
   }
 
-  // Check if clicks should be disabled (AI turn)
   const shouldDisableClicks = () => {
     if (isAIThinking) return true;
-    
-    // Disable clicks when it's AI's turn
     if (gameMode === 'human_vs_ai' && currentPlayer.color === 'white') return true;
     if (gameMode === 'ai_vs_ai') return true;
-    
     return false;
   }
 
-
-  // Handle cell click with AI turn check
   const handleCellClick = (row: number, col: number) => {
     if (shouldDisableClicks()) return;
     onCellClick(row, col);
@@ -45,23 +36,23 @@ const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPl
   }
 
 	return (
-		<div className="bg-gradient-to-br from-green-900 via-emerald-800 to-green-900 p-4 rounded-3xl shadow-2xl border-2 border-emerald-500/20 backdrop-blur-sm md:min-w-[42rem] max-w-[42rem] md:min-h-[42rem] max-h-[42rem]">
+		<div className="bg-gradient-to-br from-green-900 via-emerald-800 to-green-900 p-4 rounded-3xl shadow-2xl border-2 border-emerald-500/20 backdrop-blur-sm md:min-w-[42rem] max-w-[42rem] md:min-h-[42rem] max-h-[42rem] w-auto h-auto">
 			<div className="grid grid-cols-8 grid-rows-8 gap-4">
 				{board.flatMap((row, rowIndex) => 
 					row.map((piece, colIndex) => (
 						<div 
 							key={`${rowIndex}-${colIndex}`} 
-							className={`w-16 h-16 bg-gradient-to-br from-emerald-600 to-emerald-700 
+							className={`w-10 h-10 md:w-16 md:h-16 bg-gradient-to-br from-emerald-600 to-emerald-700 
 								border border-emerald-500/30 rounded-lg 
 								flex items-center justify-center relative 
 								transition-all duration-200
 								${shouldDisableClicks() ? 'cursor-not-allowed' : 'cursor-pointer hover:from-amber-500 hover:to-amber-600 hover:scale-105'}
 								${isValidMove(rowIndex, colIndex) 
-									? 'from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 shadow-lg shadow-cyan-500/50 animate-pulse' 
+									? 'from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 shadow-lg shadow-cyan-500/50 animate-[pulse_4s_ease-in-out]' 
 									: ''
 								}
 								${isHintPosition(rowIndex, colIndex)
-									? 'from-yellow-400 to-yellow-600 hover:from-yellow-300 hover:to-yellow-500 shadow-lg shadow-yellow-500/50 ring-2 ring-yellow-300 animate-pulse'
+									? 'from-yellow-400 to-yellow-600 hover:from-yellow-300 hover:to-yellow-500 shadow-lg shadow-yellow-500/50 ring-2 ring-yellow-300'
 									: ''
 								}`}
 							onClick={() => handleCellClick(rowIndex, colIndex)}
@@ -69,7 +60,7 @@ const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPl
 							{piece.color !== 'empty' && (
 								<div 
 									className={`
-										w-12 h-12 rounded-full border-2 shadow-xl
+										w-8 h-8 md:w-12 md:h-12 rounded-full border-2 shadow-xl
 										transition-all duration-500 animate-[fadeIn_0.5s_ease-out]
 										hover:scale-110
 										${piece.color === 'black' 
@@ -81,7 +72,7 @@ const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPl
 							)}
 							
 							{isValidMove(rowIndex, colIndex) && (
-								<div className={`w-6 h-6 rounded-full border-2 animate-bounce shadow-lg ${
+								<div className={`w-4 h-4 md:w-6 md:h-6 rounded-full border-2 animate-[bounce_1.6s_ease-in-out_infinite] shadow-lg ${
 									currentPlayer.color === 'black' 
 										? 'bg-black/80 border-black' 
 										: 'bg-white/80 border-white'
@@ -89,7 +80,7 @@ const Board: React.FC<BoardProps> = ({ board, validMoves, onCellClick, currentPl
 							)}
 
 							{isHintPosition(rowIndex, colIndex) && (
-								<div className="absolute -top-1 -right-1 bg-yellow-400 text-black text-xs font-bold px-1 py-0.5 rounded-full shadow-lg animate-bounce">
+								<div className="absolute -top-3 -right-1 bg-yellow-400 text-black text-[10px] md:text-xs font-bold px-1 py-0.5 rounded-full shadow-lg">
 									BEST
 								</div>
 							)}

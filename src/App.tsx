@@ -82,7 +82,7 @@ const GameContainer = () => {
 
   // Render game if game is started
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 to-pink-900 text-white min-w-screen flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 to-pink-900 text-white min-w-screen flex items-center justify-center px-3 md:px-0">
       <div className="max-w-screen-lg mx-auto space-y-3">
         {/* Top navigation */}
 				<TopNavigation 
