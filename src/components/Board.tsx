@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Player, Position, Board as BoardType, Move } from '../types';
+import type { Player, Position, Board as BoardType } from '../types';
 import { playCellSound, getBoardAtHistoryIndex } from '../utils/gameLogic';
 import { useAppSelector } from '../hooks/redux';
 

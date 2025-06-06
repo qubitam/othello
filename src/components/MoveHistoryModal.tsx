@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useAppSelector } from '../hooks/redux';
 import type { Move } from '../types';
 
 interface MoveHistoryModalProps {
