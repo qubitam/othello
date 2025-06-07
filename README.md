@@ -4,6 +4,24 @@ This is a simple Othello (Reversi) game built with React, TypeScript, and Redux 
 
 **[🕹️ Live Version: Check it out](https://othello-delta.vercel.app/)**
 
+### Installation & Running
+
+1. Clone the repository
+```bash
+git clone https://github.com/qubitam/othello.git
+cd othello
+```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Start the development server
+```bash
+npm start
+```
+
 ## Project Goals
 
 Building a complete Othello game to showcase:
